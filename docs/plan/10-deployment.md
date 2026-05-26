@@ -1,6 +1,6 @@
 # Phase 9 — 部署、CI/CD、文档
 
-> 预估 1-2 天 · 前置: Phase 6 (Web) / Phase 8 (Desktop) · 输出: 上线就绪
+> 前置: Phase 6 (Web) / Phase 8 (Desktop) · 输出: 上线就绪
 
 ## 目标
 
