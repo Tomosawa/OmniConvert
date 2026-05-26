@@ -21,7 +21,7 @@
   },
   "home": {
     "heading": "OmniConvert",
-    "bootstrapNotice": "Phase 5 完成:Pandoc 文档引擎已就位,你现在可以转换 MD / DOCX / HTML / EPUB / LaTeX 等文档格式。PDF 输出延后到桌面版(Phase 8)用 Pandoc + LaTeX 完整解决。下一阶段进入 MVP 收尾:批量队列 + 历史 + ZIP 打包。",
+    "bootstrapNotice": "Phase 6 完成:批量队列、IndexedDB 历史记录、ZIP 打包下载、结果预览全部就位 — Web MVP 已可上线。下一阶段补齐 9 种语言。",
     "feature": {
       "privacy": {
         "title": "零上传",
@@ -68,6 +68,17 @@
     "error": {
       "generic": "转换失败,请重试或检查文件"
     }
+  },
+  "batch": {
+    "download": "下载",
+    "downloadZip": "打包下载 {n} 个文件 (ZIP)",
+    "packing": "打包中..."
+  },
+  "history": {
+    "description": "历史记录仅保存元数据(文件名、格式、大小、时间),文件内容从不持久化。",
+    "loading": "加载中...",
+    "empty": "暂无转换记录",
+    "clearAll": "清空全部"
   },
   "imageOptions": {
     "heading": "图片高级选项",

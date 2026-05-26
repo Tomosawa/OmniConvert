@@ -17,17 +17,26 @@ export type ConversionRunner = (
   onProgress: (n: number) => void,
 ) => Promise<{ blob: Blob }>
 
+/** Hook fired after every task settles (success or error). Lets the UI
+ *  layer push a history record without coupling the store to IndexedDB. */
+export type TaskFinishedHook = (task: ConversionTask) => void
+
 export const useConversionStore = defineStore('conversion', () => {
   const items = ref<FileItem[]>([])
   const tasks = ref<ConversionTask[]>([])
   const concurrency = ref(2)
 
   let runner: ConversionRunner | null = null
+  let onFinished: TaskFinishedHook | null = null
 
   // -- runner injection ------------------------------------------------------
 
   function setRunner(fn: ConversionRunner | null): void {
     runner = fn
+  }
+
+  function setFinishedHook(fn: TaskFinishedHook | null): void {
+    onFinished = fn
   }
 
   // -- file items ------------------------------------------------------------
@@ -161,6 +170,11 @@ export const useConversionStore = defineStore('conversion', () => {
       task.error = err instanceof Error ? err.message : String(err)
       task.completedAt = Date.now()
     } finally {
+      try {
+        onFinished?.(task)
+      } catch (err) {
+        console.warn('[conversion] finished hook failed', err)
+      }
       void drain()
     }
   }
@@ -182,6 +196,7 @@ export const useConversionStore = defineStore('conversion', () => {
 
     // runner
     setRunner,
+    setFinishedHook,
 
     // file-item ops
     addDetected,

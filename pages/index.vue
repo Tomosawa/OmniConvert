@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { FileImage, FileText, Film, Loader2, ShieldCheck, Wand2 } from 'lucide-vue-next'
 import { computed, onBeforeUnmount, onMounted } from 'vue'
+import BatchActions from '@/components/BatchActions.vue'
 import FileList from '@/components/FileList.vue'
 import TaskList from '@/components/TaskList.vue'
 import UploadDropzone from '@/components/UploadDropzone.vue'
@@ -75,6 +76,7 @@ async function startConversion(): Promise<void> {
       </div>
 
       <TaskList />
+      <BatchActions />
     </div>
 
     <div class="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

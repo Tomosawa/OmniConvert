@@ -1,6 +1,6 @@
 # Phase 8 — Tauri 桌面端
 
-> 预估 3-4 天 · 前置: Phase 6 · 输出: Win/macOS/Ubuntu 三平台桌面应用
+> 前置: Phase 6 · 输出: Win/macOS/Ubuntu 三平台桌面应用
 
 ## 目标
 

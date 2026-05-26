@@ -9,6 +9,7 @@ import {
 } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
+import ResultPreview from '@/components/ResultPreview.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -168,6 +169,11 @@ const summary = computed(() => ({
             class="h-12 w-12 rounded-md border object-cover"
           >
         </div>
+
+        <ResultPreview
+          v-if="task.status === 'success' && task.fileItem.detected.category === 'media'"
+          :task="task"
+        />
       </CardContent>
     </Card>
   </section>

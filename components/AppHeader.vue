@@ -17,9 +17,7 @@ const version = config.public.appVersion as string
 
       <nav class="ml-6 hidden items-center gap-4 text-sm text-muted-foreground sm:flex">
         <NuxtLink to="/" class="hover:text-foreground">{{ t('nav.home') }}</NuxtLink>
-        <span class="cursor-not-allowed opacity-60" :title="t('common.comingSoon')">
-          {{ t('nav.history') }}
-        </span>
+        <NuxtLink to="/history" class="hover:text-foreground">{{ t('nav.history') }}</NuxtLink>
       </nav>
 
       <div class="ml-auto flex items-center gap-2">

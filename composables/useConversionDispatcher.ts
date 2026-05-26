@@ -1,4 +1,5 @@
 import { useDocumentConversion } from '@/composables/useDocumentConversion'
+import { useHistory } from '@/composables/useHistory'
 import { useImageConversion } from '@/composables/useImageConversion'
 import { useMediaConversion } from '@/composables/useMediaConversion'
 import { useConversionStore } from '@/stores/conversion'
@@ -11,13 +12,15 @@ import type { MediaOptions } from '@/types/mediaOptions'
  * Engine-agnostic dispatcher: routes a `ConversionTask` to the right
  * engine composable based on the file category and forwards progress.
  *
- * Phase 5 wires the document branch; image + media were added in 3 + 4.
+ * Phase 6 also wires the finished-hook so successful or failed tasks land
+ * in IndexedDB history (metadata only, never file contents).
  */
 export function useConversionDispatcher(): { install: () => void; uninstall: () => void } {
   const store = useConversionStore()
   const image = useImageConversion()
   const media = useMediaConversion()
   const document = useDocumentConversion()
+  const history = useHistory()
 
   const runner: ConversionRunner = async (task, onProgress) => {
     const { fileItem, targetFormat } = task
@@ -61,10 +64,29 @@ export function useConversionDispatcher(): { install: () => void; uninstall: () 
 
   function install(): void {
     store.setRunner(runner)
+    store.setFinishedHook((task) => {
+      void history.append({
+        id: task.id,
+        fileName: task.fileItem.detected.file.name,
+        sourceFormat: task.fileItem.detected.ext || 'unknown',
+        targetFormat: task.targetFormat,
+        category: task.fileItem.detected.category,
+        sizeBytes: task.fileItem.detected.file.size,
+        outputBytes: task.resultBlob?.size ?? 0,
+        durationMs:
+          task.startedAt && task.completedAt
+            ? Math.max(0, task.completedAt - task.startedAt)
+            : 0,
+        status: task.status === 'success' ? 'success' : 'error',
+        error: task.error,
+        completedAt: task.completedAt ?? Date.now(),
+      })
+    })
   }
 
   function uninstall(): void {
     store.setRunner(null)
+    store.setFinishedHook(null)
   }
 
   return { install, uninstall }

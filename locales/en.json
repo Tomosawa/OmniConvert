@@ -21,7 +21,7 @@
   },
   "home": {
     "heading": "OmniConvert",
-    "bootstrapNotice": "Phase 5 complete: the Pandoc document engine is wired up — you can now convert MD / DOCX / HTML / EPUB / LaTeX. PDF output is deferred to the desktop build (Phase 8) where Pandoc + LaTeX gives a complete result. Next phase is the MVP wrap: batch queue, history, ZIP packing.",
+    "bootstrapNotice": "Phase 6 complete: batch queue, IndexedDB history, ZIP packing and result preview are wired up — the Web MVP is shippable. Next phase rolls out 9 more languages.",
     "feature": {
       "privacy": {
         "title": "Zero uploads",
@@ -68,6 +68,17 @@
     "error": {
       "generic": "Conversion failed — please retry or check the file"
     }
+  },
+  "batch": {
+    "download": "Download",
+    "downloadZip": "Download {n} files (ZIP)",
+    "packing": "Packing..."
+  },
+  "history": {
+    "description": "History only stores metadata (filename, formats, sizes, timing). File contents are never persisted.",
+    "loading": "Loading...",
+    "empty": "No conversions yet",
+    "clearAll": "Clear all"
   },
   "imageOptions": {
     "heading": "Image options",
