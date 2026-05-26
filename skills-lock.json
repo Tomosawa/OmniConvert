@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "discover-wasm": {
+      "source": "rand/cc-polymath",
+      "sourceType": "github",
+      "skillPath": "skills/discover-wasm/SKILL.md",
+      "computedHash": "18c84d5cb39f48ec705b57b1d2be99effe174c5f535cffed94ba70d83e84f745"
+    },
+    "generating-unit-tests": {
+      "source": "jeremylongshore/claude-code-plugins-plus",
+      "sourceType": "github",
+      "skillPath": "plugins/testing/unit-test-generator/skills/generating-unit-tests/SKILL.md",
+      "computedHash": "91f3544fd43aa7688707a15372314b6c6c15a77b60908649197e7e9f7b58ca8b"
+    }
+  }
+}
