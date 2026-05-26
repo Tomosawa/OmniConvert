@@ -15,7 +15,7 @@
 | 2 ✅ | 上传与格式检测 | [03-file-upload-detection.md](./03-file-upload-detection.md) | 2 d | 拖拽上传、格式识别、推荐目标格式 |
 | 3 ✅ | 图片引擎 | [04-image-engine.md](./04-image-engine.md) | 3 d | ImageMagick WASM,基础格式互转 |
 | 4 ✅ | 音视频引擎 | [05-media-engine.md](./05-media-engine.md) | 3 d | FFmpeg WASM,音视频互转 |
-| 5 | 文档引擎 | [06-document-engine.md](./06-document-engine.md) | 2-3 d | Pandoc WASM,文档互转 |
+| 5 ✅ | 文档引擎 | [06-document-engine.md](./06-document-engine.md) | 2-3 d | Pandoc WASM,文档互转 |
 | 6 | 批量队列 + 历史 + ZIP | [07-batch-history-zip.md](./07-batch-history-zip.md) | 2-3 d | 任务队列、IndexedDB 历史、ZIP 打包 |
 | 7 | i18n 补齐 9 种语言 | [08-i18n-complete.md](./08-i18n-complete.md) | 1-2 d | 11 种语言全量翻译 |
 | 8 | Tauri 桌面端 | [09-tauri-desktop.md](./09-tauri-desktop.md) | 3-4 d | Win/macOS/Ubuntu 三平台构建 |

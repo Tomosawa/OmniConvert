@@ -1,7 +1,9 @@
+import { useDocumentConversion } from '@/composables/useDocumentConversion'
 import { useImageConversion } from '@/composables/useImageConversion'
 import { useMediaConversion } from '@/composables/useMediaConversion'
 import { useConversionStore } from '@/stores/conversion'
 import type { ConversionRunner } from '@/stores/conversion'
+import type { DocumentOptions } from '@/types/documentOptions'
 import type { ImageOptions } from '@/types/imageOptions'
 import type { MediaOptions } from '@/types/mediaOptions'
 
@@ -9,13 +11,13 @@ import type { MediaOptions } from '@/types/mediaOptions'
  * Engine-agnostic dispatcher: routes a `ConversionTask` to the right
  * engine composable based on the file category and forwards progress.
  *
- * Phase 3 added the image branch; Phase 4 adds media. Phase 5 will add
- * document.
+ * Phase 5 wires the document branch; image + media were added in 3 + 4.
  */
 export function useConversionDispatcher(): { install: () => void; uninstall: () => void } {
   const store = useConversionStore()
   const image = useImageConversion()
   const media = useMediaConversion()
+  const document = useDocumentConversion()
 
   const runner: ConversionRunner = async (task, onProgress) => {
     const { fileItem, targetFormat } = task
@@ -38,6 +40,17 @@ export function useConversionDispatcher(): { install: () => void; uninstall: () 
         sourceExt: detected.ext || 'mp4',
         targetExt: targetFormat,
         options: (fileItem.options as MediaOptions | undefined) ?? {},
+        onProgress,
+      })
+      return { blob }
+    }
+
+    if (detected.category === 'document') {
+      const blob = await document.convert({
+        file: detected.file,
+        sourceExt: detected.ext || 'md',
+        targetExt: targetFormat,
+        options: (fileItem.options as DocumentOptions | undefined) ?? {},
         onProgress,
       })
       return { blob }

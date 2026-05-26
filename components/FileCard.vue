@@ -8,6 +8,7 @@ import {
   X,
 } from 'lucide-vue-next'
 import { computed, ref, watch } from 'vue'
+import DocumentOptionsPanel from '@/components/options/DocumentOptions.vue'
 import ImageOptionsPanel from '@/components/options/ImageOptions.vue'
 import MediaOptionsPanel from '@/components/options/MediaOptions.vue'
 import LargeFileWarning from '@/components/LargeFileWarning.vue'
@@ -24,6 +25,7 @@ import {
 import { useFormatRecommend } from '@/composables/useFormatRecommend'
 import { useConversionStore } from '@/stores/conversion'
 import type { FileItem } from '@/types/file'
+import type { DocumentOptions } from '@/types/documentOptions'
 import type { ImageOptions } from '@/types/imageOptions'
 import type { MediaOptions } from '@/types/mediaOptions'
 import { formatBytes } from '@/utils/fileSize'
@@ -65,6 +67,14 @@ const mediaOptions = computed<MediaOptions>(
 )
 
 function updateMediaOptions(value: MediaOptions): void {
+  store.setItemOptions(props.item.id, value as Record<string, unknown>)
+}
+
+const documentOptions = computed<DocumentOptions>(
+  () => (props.item.options as DocumentOptions | undefined) ?? {},
+)
+
+function updateDocumentOptions(value: DocumentOptions): void {
   store.setItemOptions(props.item.id, value as Record<string, unknown>)
 }
 
@@ -217,6 +227,13 @@ const CategoryIcon = computed(() => {
           :model-value="mediaOptions"
           :target-ext="item.targetFormat"
           @update:model-value="updateMediaOptions"
+        />
+
+        <DocumentOptionsPanel
+          v-if="detected.category === 'document' && targets.length > 0 && item.targetFormat"
+          :model-value="documentOptions"
+          :target-ext="item.targetFormat"
+          @update:model-value="updateDocumentOptions"
         />
       </div>
     </CardContent>
