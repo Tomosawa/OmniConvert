@@ -1,0 +1,9 @@
+{
+  "app": {
+    "name": "OmniConvert",
+    "tagline": "本地优先的全能文件转换器,所有转换都在你的浏览器内完成,文件永不上传。"
+  },
+  "home": {
+    "bootstrapNotice": "Phase 0 脚手架已就位。后续阶段将逐步接入 UI、文件上传、转换引擎与桌面端。"
+  }
+}

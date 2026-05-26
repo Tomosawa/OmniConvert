@@ -1,0 +1,27 @@
+{
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "exactOptionalPropertyTypes": false,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "types": [
+      "vitest/globals",
+      "@nuxt/test-utils"
+    ]
+  },
+  "include": [
+    ".nuxt/types/**/*.d.ts",
+    "**/*.ts",
+    "**/*.vue",
+    "tests/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".output",
+    "dist",
+    "vitest.config.ts"
+  ]
+}
