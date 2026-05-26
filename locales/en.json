@@ -21,7 +21,7 @@
   },
   "home": {
     "heading": "OmniConvert",
-    "bootstrapNotice": "Phase 1 complete: UI framework, bilingual toggle and light/dark theme are wired up. Next phase brings file upload and format detection.",
+    "bootstrapNotice": "Phase 2 complete: file upload and format detection are wired up. Next phase brings the ImageMagick image conversion engine.",
     "feature": {
       "privacy": {
         "title": "Zero uploads",
@@ -36,6 +36,37 @@
         "description": "Identical experience on the web and on Windows / macOS / Ubuntu desktop apps."
       }
     }
+  },
+  "upload": {
+    "heading": "Upload files",
+    "description": "Drag files here or click to pick. Everything is processed locally — nothing is uploaded.",
+    "dropHere": "Drop files to upload",
+    "browse": "Choose files",
+    "browseHint": "Supports common image, audio/video and document formats",
+    "addMore": "Add more files",
+    "clearAll": "Clear all",
+    "selected": "{count} file(s) selected"
+  },
+  "fileCard": {
+    "convertTo": "Convert to",
+    "selectTarget": "Select target format",
+    "remove": "Remove",
+    "magicMismatch": "Extension does not match file contents",
+    "unknownFormat": "Unrecognised format",
+    "noTargets": "No target formats available",
+    "category": {
+      "image": "Image",
+      "media": "Audio/Video",
+      "document": "Document",
+      "unknown": "Unknown"
+    }
+  },
+  "largeFile": {
+    "badge": "Large file",
+    "title": "Use the desktop app for large files",
+    "description": "This file is larger than {threshold}. Converting in the browser may fail due to memory limits. The desktop app uses native CLI tools and handles GB-scale files reliably.",
+    "continue": "Try in browser anyway",
+    "downloadDesktop": "Download desktop"
   },
   "common": {
     "comingSoon": "Coming soon",

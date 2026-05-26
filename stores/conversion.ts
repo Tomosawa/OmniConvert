@@ -1,18 +1,51 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import type { ConversionTask } from '@/types/conversion'
+import type { DetectedFile, FileItem } from '@/types/file'
+import { uid } from '@/utils/fileSize'
 
 /**
- * Conversion task store — Phase 1 ships the *shape* and a few helpers so
- * downstream UI work can wire up against a stable surface. Full execution
- * (engine dispatch, concurrency, cancellation, persistence) lands in Phase 6.
+ * Conversion store — single source of truth for both staged file items
+ * (uploaded but not yet converted) and conversion tasks.
  *
- * Callers should treat the store as the single source of truth for tasks;
- * direct mutation of `tasks` from outside is intentionally discouraged.
+ * Phase 2 introduces the file-item layer; Phase 6 will fully wire task
+ * execution (engine dispatch, concurrency, cancellation). The two layers
+ * coexist on purpose: a file may sit in `items` indefinitely while the
+ * user picks a target format, and only when they hit "convert" does it
+ * become a task.
  */
 export const useConversionStore = defineStore('conversion', () => {
+  const items = ref<FileItem[]>([])
   const tasks = ref<ConversionTask[]>([])
   const concurrency = ref(2)
+
+  // -- file items ------------------------------------------------------------
+
+  function addDetected(detected: DetectedFile): FileItem {
+    const item: FileItem = {
+      id: uid('file'),
+      detected,
+      targetFormat: null,
+    }
+    items.value.push(item)
+    return item
+  }
+
+  function removeItem(id: string): void {
+    const idx = items.value.findIndex((i) => i.id === id)
+    if (idx !== -1) items.value.splice(idx, 1)
+  }
+
+  function setTargetFormat(id: string, format: string | null): void {
+    const item = items.value.find((i) => i.id === id)
+    if (item) item.targetFormat = format
+  }
+
+  function clearItems(): void {
+    items.value = []
+  }
+
+  // -- tasks (full execution wired in Phase 6) ------------------------------
 
   const pending = computed(() => tasks.value.filter((t) => t.status === 'pending'))
   const running = computed(() => tasks.value.filter((t) => t.status === 'running'))
@@ -35,11 +68,16 @@ export const useConversionStore = defineStore('conversion', () => {
     tasks.value.splice(idx, 1)
   }
 
-  function clearAll(): void {
+  function clearTasks(): void {
     for (const t of tasks.value) {
       if (t.resultUrl) URL.revokeObjectURL(t.resultUrl)
     }
     tasks.value = []
+  }
+
+  function clearAll(): void {
+    clearItems()
+    clearTasks()
   }
 
   function setConcurrency(n: number): void {
@@ -47,8 +85,18 @@ export const useConversionStore = defineStore('conversion', () => {
   }
 
   return {
+    // state
+    items,
     tasks,
     concurrency,
+
+    // file-item ops
+    addDetected,
+    removeItem,
+    setTargetFormat,
+    clearItems,
+
+    // task ops
     pending,
     running,
     completed,
@@ -58,6 +106,7 @@ export const useConversionStore = defineStore('conversion', () => {
     errorCount,
     addTask,
     removeTask,
+    clearTasks,
     clearAll,
     setConcurrency,
   }

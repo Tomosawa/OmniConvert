@@ -21,7 +21,7 @@
   },
   "home": {
     "heading": "OmniConvert",
-    "bootstrapNotice": "Phase 1 完成:UI 框架、双语切换与深浅色主题已就位。下一阶段将接入文件上传与格式检测。",
+    "bootstrapNotice": "Phase 2 完成:文件上传与格式检测已就位。下一阶段将接入 ImageMagick 图片转换引擎。",
     "feature": {
       "privacy": {
         "title": "零上传",
@@ -36,6 +36,37 @@
         "description": "Web 在线版与 Windows / macOS / Ubuntu 桌面客户端,体验一致。"
       }
     }
+  },
+  "upload": {
+    "heading": "上传文件",
+    "description": "拖拽文件到此处,或点击选择。所有文件都在本地处理,不会被上传。",
+    "dropHere": "拖放文件到这里上传",
+    "browse": "选择文件",
+    "browseHint": "支持图片、音视频、文档等常见格式",
+    "addMore": "继续添加文件",
+    "clearAll": "清空全部",
+    "selected": "已选择 {count} 个文件"
+  },
+  "fileCard": {
+    "convertTo": "转换为",
+    "selectTarget": "选择目标格式",
+    "remove": "移除",
+    "magicMismatch": "扩展名与文件内容不匹配",
+    "unknownFormat": "无法识别的格式",
+    "noTargets": "暂无可用的目标格式",
+    "category": {
+      "image": "图片",
+      "media": "音视频",
+      "document": "文档",
+      "unknown": "未知"
+    }
+  },
+  "largeFile": {
+    "badge": "大文件",
+    "title": "建议使用桌面版处理大文件",
+    "description": "当前文件超过 {threshold},在浏览器中转换可能因内存不足而失败。桌面版借助原生 CLI 工具,可稳定处理 GB 级大文件。",
+    "continue": "仍然在浏览器中尝试",
+    "downloadDesktop": "下载桌面版"
   },
   "common": {
     "comingSoon": "即将推出",
