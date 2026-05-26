@@ -1,5 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import { defineNuxtConfig } from 'nuxt/config'
+import wasm from 'vite-plugin-wasm'
+import topLevelAwait from 'vite-plugin-top-level-await'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-25',
@@ -93,6 +95,26 @@ export default defineNuxtConfig({
   alias: {
     '~': fileURLToPath(new URL('./', import.meta.url)),
     '@': fileURLToPath(new URL('./', import.meta.url)),
+  },
+
+  // pandoc-wasm uses the (proposed) ESM Wasm-import syntax; vite needs the
+  // wasm + top-level-await plugins to handle it. Other engines (magick-wasm,
+  // ffmpeg) use plain `?url` imports and don't depend on these plugins.
+  vite: {
+    plugins: [wasm(), topLevelAwait()],
+    optimizeDeps: {
+      // pandoc-wasm uses ESM Wasm imports + top-level-await + WASI imports
+      // — pre-bundling it confuses Rollup. Force browser to use the source.
+      exclude: ['pandoc-wasm'],
+    },
+    build: {
+      rollupOptions: {
+        // The Wasm binary imports `wasi_snapshot_preview1` symbolically; the
+        // pandoc-wasm runtime polyfills it via @bjorn3/browser_wasi_shim at
+        // runtime, so we tell Rollup to leave the import alone.
+        external: ['wasi_snapshot_preview1'],
+      },
+    },
   },
 
   app: {

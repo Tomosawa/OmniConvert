@@ -81,18 +81,18 @@ export const FORMAT_RECOMMENDATIONS: Readonly<Record<string, readonly string[]>>
   avi: ['mp4', 'webm', 'mov', 'mkv', 'mp3', 'wav'],
   m4v: ['mp4', 'webm', 'mov', 'mkv'],
 
-  // document targets
-  md: ['docx', 'html', 'epub', 'pdf', 'tex'],
-  markdown: ['docx', 'html', 'epub', 'pdf', 'tex'],
-  docx: ['md', 'html', 'pdf', 'epub', 'tex'],
-  html: ['md', 'docx', 'pdf', 'epub'],
-  htm: ['md', 'docx', 'pdf', 'epub'],
+  // document targets — PDF deferred to Phase 8 desktop (LaTeX/Pandoc CLI).
+  md: ['docx', 'html', 'epub', 'tex'],
+  markdown: ['docx', 'html', 'epub', 'tex'],
+  docx: ['md', 'html', 'epub', 'tex'],
+  html: ['md', 'docx', 'epub'],
+  htm: ['md', 'docx', 'epub'],
   pdf: ['md', 'docx', 'html'],
-  epub: ['md', 'html', 'docx', 'pdf'],
-  tex: ['md', 'docx', 'html', 'pdf'],
-  latex: ['md', 'docx', 'html', 'pdf'],
-  rst: ['md', 'docx', 'html', 'pdf'],
-  txt: ['md', 'docx', 'html', 'pdf'],
+  epub: ['md', 'html', 'docx'],
+  tex: ['md', 'docx', 'html'],
+  latex: ['md', 'docx', 'html'],
+  rst: ['md', 'docx', 'html'],
+  txt: ['md', 'docx', 'html'],
 }
 
 /** Lowercased & normalised; treats 'jpeg' as 'jpg' for lookup convenience. */

@@ -21,7 +21,7 @@
   },
   "home": {
     "heading": "OmniConvert",
-    "bootstrapNotice": "Phase 4 complete: the FFmpeg audio/video engine is wired up — you can now convert MP4 / WebM / MP3 / WAV / FLAC and more. Next phase brings the Pandoc document engine.",
+    "bootstrapNotice": "Phase 5 complete: the Pandoc document engine is wired up — you can now convert MD / DOCX / HTML / EPUB / LaTeX. PDF output is deferred to the desktop build (Phase 8) where Pandoc + LaTeX gives a complete result. Next phase is the MVP wrap: batch queue, history, ZIP packing.",
     "feature": {
       "privacy": {
         "title": "Zero uploads",
@@ -88,6 +88,13 @@
     "height": "Height",
     "audioOnly": "Audio only",
     "auto": "Auto"
+  },
+  "documentOptions": {
+    "heading": "Document options",
+    "standalone": "Standalone (full document)",
+    "toc": "Generate table of contents",
+    "css": "Stylesheet URL",
+    "cssPlaceholder": "e.g. https://example.com/style.css"
   },
   "fileCard": {
     "convertTo": "Convert to",

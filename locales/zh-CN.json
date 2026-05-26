@@ -21,7 +21,7 @@
   },
   "home": {
     "heading": "OmniConvert",
-    "bootstrapNotice": "Phase 4 完成:FFmpeg 音视频引擎已就位,你现在可以转换 MP4 / WebM / MP3 / WAV / FLAC 等常见音视频格式。下一阶段将接入 Pandoc 文档引擎。",
+    "bootstrapNotice": "Phase 5 完成:Pandoc 文档引擎已就位,你现在可以转换 MD / DOCX / HTML / EPUB / LaTeX 等文档格式。PDF 输出延后到桌面版(Phase 8)用 Pandoc + LaTeX 完整解决。下一阶段进入 MVP 收尾:批量队列 + 历史 + ZIP 打包。",
     "feature": {
       "privacy": {
         "title": "零上传",
@@ -88,6 +88,13 @@
     "height": "高",
     "audioOnly": "仅输出音频",
     "auto": "自动"
+  },
+  "documentOptions": {
+    "heading": "文档高级选项",
+    "standalone": "独立文档(包含完整结构)",
+    "toc": "生成目录",
+    "css": "样式表 URL",
+    "cssPlaceholder": "如 https://example.com/style.css"
   },
   "fileCard": {
     "convertTo": "转换为",
