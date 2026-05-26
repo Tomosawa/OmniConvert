@@ -8,6 +8,7 @@ import {
   X,
 } from 'lucide-vue-next'
 import { computed, ref, watch } from 'vue'
+import ImageOptionsPanel from '@/components/options/ImageOptions.vue'
 import LargeFileWarning from '@/components/LargeFileWarning.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -22,6 +23,7 @@ import {
 import { useFormatRecommend } from '@/composables/useFormatRecommend'
 import { useConversionStore } from '@/stores/conversion'
 import type { FileItem } from '@/types/file'
+import type { ImageOptions } from '@/types/imageOptions'
 import { formatBytes } from '@/utils/fileSize'
 
 interface Props {
@@ -42,6 +44,19 @@ const threshold = computed(() => Number(config.public.largeFileThreshold) || 0)
 const isLarge = computed(() => detected.value.file.size > threshold.value)
 
 const previewUrl = ref<string | null>(null)
+
+const LOSSY_TARGETS = new Set(['jpg', 'jpeg', 'webp'])
+const qualityRelevant = computed(() =>
+  LOSSY_TARGETS.has((props.item.targetFormat ?? '').toLowerCase()),
+)
+
+const imageOptions = computed<ImageOptions>(
+  () => (props.item.options as ImageOptions | undefined) ?? {},
+)
+
+function updateImageOptions(value: ImageOptions): void {
+  store.setItemOptions(props.item.id, value as Record<string, unknown>)
+}
 
 watch(
   () => detected.value.file,
@@ -179,6 +194,13 @@ const CategoryIcon = computed(() => {
         <p v-else class="text-xs text-muted-foreground">
           {{ t('fileCard.noTargets') }}
         </p>
+
+        <ImageOptionsPanel
+          v-if="detected.category === 'image' && targets.length > 0"
+          :model-value="imageOptions"
+          :quality-relevant="qualityRelevant"
+          @update:model-value="updateImageOptions"
+        />
       </div>
     </CardContent>
   </Card>

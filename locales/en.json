@@ -21,7 +21,7 @@
   },
   "home": {
     "heading": "OmniConvert",
-    "bootstrapNotice": "Phase 2 complete: file upload and format detection are wired up. Next phase brings the ImageMagick image conversion engine.",
+    "bootstrapNotice": "Phase 3 complete: the ImageMagick image engine is wired up — you can now convert JPG / PNG / WebP / GIF and more. Next phase brings the FFmpeg audio/video engine.",
     "feature": {
       "privacy": {
         "title": "Zero uploads",
@@ -46,6 +46,36 @@
     "addMore": "Add more files",
     "clearAll": "Clear all",
     "selected": "{count} file(s) selected"
+  },
+  "convert": {
+    "start": "Start conversion",
+    "running": "Converting...",
+    "noEligible": "Pick a target format for at least one file first"
+  },
+  "task": {
+    "heading": "Conversion tasks",
+    "clear": "Clear tasks",
+    "retry": "Retry",
+    "download": "Download",
+    "outputSize": "out",
+    "failedCount": "{n} failed",
+    "status": {
+      "pending": "Pending",
+      "running": "Converting",
+      "success": "Done",
+      "error": "Failed"
+    },
+    "error": {
+      "generic": "Conversion failed — please retry or check the file"
+    }
+  },
+  "imageOptions": {
+    "heading": "Image options",
+    "quality": "Quality",
+    "resize": "Resize",
+    "width": "Width",
+    "height": "Height",
+    "stripMetadata": "Strip metadata"
   },
   "fileCard": {
     "convertTo": "Convert to",

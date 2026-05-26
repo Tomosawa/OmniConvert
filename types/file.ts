@@ -22,4 +22,7 @@ export interface FileItem {
   detected: DetectedFile
   /** User-selected target format (empty until chosen). */
   targetFormat: string | null
+  /** Per-engine options (image/media/document). Free-form bag — engines
+   *  read only what they recognise. */
+  options?: Record<string, unknown>
 }

@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@imagemagick/magick-wasm':
+        specifier: ^0.0.40
+        version: 0.0.40
       '@nuxtjs/color-mode':
         specifier: ^3.5.2
         version: 3.5.2(magicast@0.5.3)
@@ -831,6 +834,9 @@ packages:
   '@humanwhocodes/retry@0.4.3':
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
+
+  '@imagemagick/magick-wasm@0.0.40':
+    resolution: {integrity: sha512-vwV4qZ5JfPblYoJTBKn/dAMElXMmIf4inEsCtjskZwU3609ejpz1pvXWE3UEt8G+0L2SYHdoBNKCPU4ezpDXaQ==}
 
   '@internationalized/date@3.12.1':
     resolution: {integrity: sha512-6IedsVWXyq4P9Tj+TxuU8WGWM70hYLl12nbYU8jkikVpa6WXapFazPUcHUMDMoWftIDE2ILDkFFte6W2nFCkRQ==}
@@ -5674,6 +5680,8 @@ snapshots:
   '@humanwhocodes/module-importer@1.0.1': {}
 
   '@humanwhocodes/retry@0.4.3': {}
+
+  '@imagemagick/magick-wasm@0.0.40': {}
 
   '@internationalized/date@3.12.1':
     dependencies:

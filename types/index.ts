@@ -1,3 +1,4 @@
 export * from './i18n'
 export * from './file'
 export * from './conversion'
+export * from './imageOptions'

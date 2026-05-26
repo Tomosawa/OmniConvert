@@ -21,7 +21,7 @@
   },
   "home": {
     "heading": "OmniConvert",
-    "bootstrapNotice": "Phase 2 完成:文件上传与格式检测已就位。下一阶段将接入 ImageMagick 图片转换引擎。",
+    "bootstrapNotice": "Phase 3 完成:ImageMagick 图片引擎已就位,你现在可以转换 JPG / PNG / WebP / GIF 等常见格式。下一阶段将接入 FFmpeg 音视频引擎。",
     "feature": {
       "privacy": {
         "title": "零上传",
@@ -46,6 +46,36 @@
     "addMore": "继续添加文件",
     "clearAll": "清空全部",
     "selected": "已选择 {count} 个文件"
+  },
+  "convert": {
+    "start": "开始转换",
+    "running": "转换中...",
+    "noEligible": "请至少为一个文件选择目标格式"
+  },
+  "task": {
+    "heading": "转换任务",
+    "clear": "清空任务",
+    "retry": "重试",
+    "download": "下载",
+    "outputSize": "输出",
+    "failedCount": "{n} 个失败",
+    "status": {
+      "pending": "等待中",
+      "running": "转换中",
+      "success": "已完成",
+      "error": "失败"
+    },
+    "error": {
+      "generic": "转换失败,请重试或检查文件"
+    }
+  },
+  "imageOptions": {
+    "heading": "图片高级选项",
+    "quality": "质量",
+    "resize": "尺寸缩放",
+    "width": "宽",
+    "height": "高",
+    "stripMetadata": "去除元数据"
   },
   "fileCard": {
     "convertTo": "转换为",
