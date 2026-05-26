@@ -22,6 +22,17 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/tailwind.css'],
 
+  // shadcn-vue components live under components/ui/* with index barrels.
+  // We import them explicitly via `@/components/ui/*` aliases, so we tell
+  // Nuxt to skip auto-registering that subtree to avoid duplicate-name warnings.
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+      ignore: ['**/ui/**'],
+    },
+  ],
+
   // Phase 1 fully configures color-mode; minimal here to avoid module errors.
   colorMode: {
     classSuffix: '',
@@ -29,7 +40,7 @@ export default defineNuxtConfig({
     fallback: 'light',
   },
 
-  // Phase 1 expands locales to zh-CN + en; Phase 7 to 11 languages.
+  // Phase 7 will expand locales to all 11 languages.
   i18n: {
     defaultLocale: 'zh-CN',
     strategy: 'no_prefix',
@@ -38,7 +49,18 @@ export default defineNuxtConfig({
     langDir: 'locales/',
     locales: [
       { code: 'zh-CN', iso: 'zh-CN', name: '简体中文', file: 'zh-CN.json' },
+      { code: 'en', iso: 'en-US', name: 'English', file: 'en.json' },
     ],
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'omniconvert_locale',
+      redirectOn: 'root',
+      alwaysRedirect: false,
+      fallbackLocale: 'en',
+    },
+    bundle: {
+      optimizeTranslationDirective: false,
+    },
   },
 
   // Phase 4 will add COOP/COEP headers here for SharedArrayBuffer (FFmpeg).
