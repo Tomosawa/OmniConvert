@@ -2,19 +2,24 @@ import { describe, expect, it, beforeEach } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useConversionStore } from '@/stores/conversion'
 import type { ConversionTask } from '@/types/conversion'
+import type { DetectedFile } from '@/types/file'
+
+function makeDetected(name = 'a.png', ext = 'png'): DetectedFile {
+  return {
+    file: new File(['hello'], name, { type: 'image/png' }),
+    category: 'image',
+    mime: 'image/png',
+    ext,
+    magicMatch: true,
+  }
+}
 
 function makeTask(overrides: Partial<ConversionTask> = {}): ConversionTask {
   return {
     id: overrides.id ?? `task-${Math.random().toString(36).slice(2, 8)}`,
     fileItem: {
       id: 'file-1',
-      detected: {
-        file: new File(['hello'], 'a.png', { type: 'image/png' }),
-        category: 'image',
-        mime: 'image/png',
-        ext: 'png',
-        magicMatch: true,
-      },
+      detected: makeDetected(),
       targetFormat: 'jpg',
     },
     targetFormat: 'jpg',
@@ -24,7 +29,7 @@ function makeTask(overrides: Partial<ConversionTask> = {}): ConversionTask {
   }
 }
 
-describe('stores/conversion', () => {
+describe('stores/conversion — task layer', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
   })
@@ -65,11 +70,52 @@ describe('stores/conversion', () => {
     expect(store.concurrency).toBe(3)
   })
 
-  it('clearAll wipes everything', () => {
+  it('clearTasks wipes the task list', () => {
     const store = useConversionStore()
     store.addTask(makeTask())
     store.addTask(makeTask())
+    store.clearTasks()
+    expect(store.total).toBe(0)
+  })
+})
+
+describe('stores/conversion — file-item layer', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
+  it('addDetected pushes a fresh FileItem with null target', () => {
+    const store = useConversionStore()
+    const item = store.addDetected(makeDetected('a.png'))
+    expect(store.items.length).toBe(1)
+    expect(item.targetFormat).toBe(null)
+    expect(item.detected.ext).toBe('png')
+  })
+
+  it('setTargetFormat updates the matching item only', () => {
+    const store = useConversionStore()
+    const a = store.addDetected(makeDetected('a.png'))
+    const b = store.addDetected(makeDetected('b.png'))
+    store.setTargetFormat(a.id, 'jpg')
+    expect(a.targetFormat).toBe('jpg')
+    expect(b.targetFormat).toBe(null)
+  })
+
+  it('removeItem drops by id', () => {
+    const store = useConversionStore()
+    const a = store.addDetected(makeDetected('a.png'))
+    store.addDetected(makeDetected('b.png'))
+    store.removeItem(a.id)
+    expect(store.items.length).toBe(1)
+    expect(store.items[0]?.detected.file.name).toBe('b.png')
+  })
+
+  it('clearAll wipes both items and tasks', () => {
+    const store = useConversionStore()
+    store.addDetected(makeDetected())
+    store.addTask(makeTask())
     store.clearAll()
+    expect(store.items.length).toBe(0)
     expect(store.total).toBe(0)
   })
 })
