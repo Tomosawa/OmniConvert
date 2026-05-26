@@ -21,7 +21,7 @@
   },
   "home": {
     "heading": "OmniConvert",
-    "bootstrapNotice": "Phase 3 完成:ImageMagick 图片引擎已就位,你现在可以转换 JPG / PNG / WebP / GIF 等常见格式。下一阶段将接入 FFmpeg 音视频引擎。",
+    "bootstrapNotice": "Phase 4 完成:FFmpeg 音视频引擎已就位,你现在可以转换 MP4 / WebM / MP3 / WAV / FLAC 等常见音视频格式。下一阶段将接入 Pandoc 文档引擎。",
     "feature": {
       "privacy": {
         "title": "零上传",
@@ -76,6 +76,18 @@
     "width": "宽",
     "height": "高",
     "stripMetadata": "去除元数据"
+  },
+  "mediaOptions": {
+    "heading": "音视频高级选项",
+    "audioBitrate": "音频比特率",
+    "videoBitrate": "视频比特率",
+    "sampleRate": "采样率",
+    "fps": "帧率",
+    "resolution": "分辨率",
+    "width": "宽",
+    "height": "高",
+    "audioOnly": "仅输出音频",
+    "auto": "自动"
   },
   "fileCard": {
     "convertTo": "转换为",

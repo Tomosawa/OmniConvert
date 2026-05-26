@@ -63,8 +63,17 @@ export default defineNuxtConfig({
     },
   },
 
-  // Phase 4 will add COOP/COEP headers here for SharedArrayBuffer (FFmpeg).
-  routeRules: {},
+  // SharedArrayBuffer required by @ffmpeg/ffmpeg multi-threaded core.
+  // Both COOP and COEP headers must be set so the page is cross-origin
+  // isolated. Phase 9 mirrors these in vercel.json for the deployed Web build.
+  routeRules: {
+    '/**': {
+      headers: {
+        'Cross-Origin-Opener-Policy': 'same-origin',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+      },
+    },
+  },
 
   runtimeConfig: {
     public: {

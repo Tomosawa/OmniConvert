@@ -21,7 +21,7 @@
   },
   "home": {
     "heading": "OmniConvert",
-    "bootstrapNotice": "Phase 3 complete: the ImageMagick image engine is wired up — you can now convert JPG / PNG / WebP / GIF and more. Next phase brings the FFmpeg audio/video engine.",
+    "bootstrapNotice": "Phase 4 complete: the FFmpeg audio/video engine is wired up — you can now convert MP4 / WebM / MP3 / WAV / FLAC and more. Next phase brings the Pandoc document engine.",
     "feature": {
       "privacy": {
         "title": "Zero uploads",
@@ -76,6 +76,18 @@
     "width": "Width",
     "height": "Height",
     "stripMetadata": "Strip metadata"
+  },
+  "mediaOptions": {
+    "heading": "Audio/Video options",
+    "audioBitrate": "Audio bitrate",
+    "videoBitrate": "Video bitrate",
+    "sampleRate": "Sample rate",
+    "fps": "Frame rate",
+    "resolution": "Resolution",
+    "width": "Width",
+    "height": "Height",
+    "audioOnly": "Audio only",
+    "auto": "Auto"
   },
   "fileCard": {
     "convertTo": "Convert to",
