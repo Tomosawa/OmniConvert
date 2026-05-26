@@ -9,6 +9,7 @@ import {
 } from 'lucide-vue-next'
 import { computed, ref, watch } from 'vue'
 import ImageOptionsPanel from '@/components/options/ImageOptions.vue'
+import MediaOptionsPanel from '@/components/options/MediaOptions.vue'
 import LargeFileWarning from '@/components/LargeFileWarning.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -24,6 +25,7 @@ import { useFormatRecommend } from '@/composables/useFormatRecommend'
 import { useConversionStore } from '@/stores/conversion'
 import type { FileItem } from '@/types/file'
 import type { ImageOptions } from '@/types/imageOptions'
+import type { MediaOptions } from '@/types/mediaOptions'
 import { formatBytes } from '@/utils/fileSize'
 
 interface Props {
@@ -55,6 +57,14 @@ const imageOptions = computed<ImageOptions>(
 )
 
 function updateImageOptions(value: ImageOptions): void {
+  store.setItemOptions(props.item.id, value as Record<string, unknown>)
+}
+
+const mediaOptions = computed<MediaOptions>(
+  () => (props.item.options as MediaOptions | undefined) ?? {},
+)
+
+function updateMediaOptions(value: MediaOptions): void {
   store.setItemOptions(props.item.id, value as Record<string, unknown>)
 }
 
@@ -200,6 +210,13 @@ const CategoryIcon = computed(() => {
           :model-value="imageOptions"
           :quality-relevant="qualityRelevant"
           @update:model-value="updateImageOptions"
+        />
+
+        <MediaOptionsPanel
+          v-if="detected.category === 'media' && targets.length > 0 && item.targetFormat"
+          :model-value="mediaOptions"
+          :target-ext="item.targetFormat"
+          @update:model-value="updateMediaOptions"
         />
       </div>
     </CardContent>
