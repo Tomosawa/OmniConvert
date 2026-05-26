@@ -10,8 +10,8 @@
 
 | Phase | 主题 | 文档 | 预估 | 关键产出 |
 | :--- | :--- | :--- | :--- | :--- |
-| 0 | 项目脚手架 | [01-bootstrap.md](./01-bootstrap.md) | 1-2 d | Nuxt 3 工程,工具链就绪 |
-| 1 | UI + i18n + 主题 | [02-core-ui-i18n-theme.md](./02-core-ui-i18n-theme.md) | 2-3 d | 通用布局、shadcn-vue、zh-CN/en 双语、深浅色 |
+| 0 ✅ | 项目脚手架 | [01-bootstrap.md](./01-bootstrap.md) | 1-2 d | Nuxt 3 工程,工具链就绪 |
+| 1 ✅ | UI + i18n + 主题 | [02-core-ui-i18n-theme.md](./02-core-ui-i18n-theme.md) | 2-3 d | 通用布局、shadcn-vue、zh-CN/en 双语、深浅色 |
 | 2 | 上传与格式检测 | [03-file-upload-detection.md](./03-file-upload-detection.md) | 2 d | 拖拽上传、格式识别、推荐目标格式 |
 | 3 | 图片引擎 | [04-image-engine.md](./04-image-engine.md) | 3 d | ImageMagick WASM,基础格式互转 |
 | 4 | 音视频引擎 | [05-media-engine.md](./05-media-engine.md) | 3 d | FFmpeg WASM,音视频互转 |

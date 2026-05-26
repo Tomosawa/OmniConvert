@@ -2,7 +2,7 @@
 
 > 本地优先的全能文件转换器 — 图片、音视频、文档全部在你的浏览器内通过 WebAssembly 完成转换,**文件永不上传**。
 
-[![Status](https://img.shields.io/badge/status-Phase%200%20Bootstrap-blue)]() [![Vue](https://img.shields.io/badge/Vue-3-42b883)]() [![Nuxt](https://img.shields.io/badge/Nuxt-3.16-00DC82)]() [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)]() [![License](https://img.shields.io/badge/license-MIT-green)]()
+[![Status](https://img.shields.io/badge/status-Phase%201%20Complete-brightgreen)]() [![Vue](https://img.shields.io/badge/Vue-3-42b883)]() [![Nuxt](https://img.shields.io/badge/Nuxt-3.16-00DC82)]() [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)]() [![License](https://img.shields.io/badge/license-MIT-green)]()
 
 ## 项目简介
 
@@ -17,14 +17,14 @@ OmniConvert 解决一件事:**安全、免费、全能地转换你的本地文�
 
 ## 当前状态
 
-**Phase 0 — 项目脚手架(已完成)**
+**Phase 1 — UI 框架 + i18n + 主题(已完成)**
 
 完整的 10 阶段开发计划见 [docs/plan/00-overview.md](docs/plan/00-overview.md):
 
 | Phase | 主题 | 状态 |
 | :--- | :--- | :--- |
 | 0 | 项目脚手架 | ✅ 已完成 |
-| 1 | UI + i18n + 主题 | 待开始 |
+| 1 | UI + i18n + 主题 | ✅ 已完成 |
 | 2 | 文件上传与格式检测 | 待开始 |
 | 3 | ImageMagick 图片引擎 | 待开始 |
 | 4 | FFmpeg 音视频引擎 | 待开始 |

@@ -1,0 +1,51 @@
+{
+  "app": {
+    "name": "OmniConvert",
+    "tagline": "Local-first all-in-one file converter. Every conversion happens inside your browser — your files never leave your device.",
+    "version": "Version {version}"
+  },
+  "nav": {
+    "home": "Home",
+    "history": "History"
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "toggle": "Toggle theme"
+  },
+  "language": {
+    "label": "Language",
+    "toggle": "Switch language"
+  },
+  "home": {
+    "heading": "OmniConvert",
+    "bootstrapNotice": "Phase 1 complete: UI framework, bilingual toggle and light/dark theme are wired up. Next phase brings file upload and format detection.",
+    "feature": {
+      "privacy": {
+        "title": "Zero uploads",
+        "description": "All conversions run inside your browser via WebAssembly — files never leave your device."
+      },
+      "engines": {
+        "title": "Three engines",
+        "description": "ImageMagick, FFmpeg and Pandoc together cover every common image, audio/video and document format."
+      },
+      "platforms": {
+        "title": "Every platform",
+        "description": "Identical experience on the web and on Windows / macOS / Ubuntu desktop apps."
+      }
+    }
+  },
+  "common": {
+    "comingSoon": "Coming soon",
+    "open": "Open",
+    "close": "Close",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "footer": {
+    "copyright": "© 2026 OmniConvert",
+    "tagline": "Privacy first · Runs locally · Open source"
+  }
+}

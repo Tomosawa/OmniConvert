@@ -1,9 +1,51 @@
 {
   "app": {
     "name": "OmniConvert",
-    "tagline": "本地优先的全能文件转换器,所有转换都在你的浏览器内完成,文件永不上传。"
+    "tagline": "本地优先的全能文件转换器,所有转换都在你的浏览器内完成,文件永不上传。",
+    "version": "版本 {version}"
+  },
+  "nav": {
+    "home": "首页",
+    "history": "历史记录"
+  },
+  "theme": {
+    "label": "主题",
+    "light": "浅色",
+    "dark": "深色",
+    "system": "跟随系统",
+    "toggle": "切换主题"
+  },
+  "language": {
+    "label": "语言",
+    "toggle": "切换语言"
   },
   "home": {
-    "bootstrapNotice": "Phase 0 脚手架已就位。后续阶段将逐步接入 UI、文件上传、转换引擎与桌面端。"
+    "heading": "OmniConvert",
+    "bootstrapNotice": "Phase 1 完成:UI 框架、双语切换与深浅色主题已就位。下一阶段将接入文件上传与格式检测。",
+    "feature": {
+      "privacy": {
+        "title": "零上传",
+        "description": "所有转换在浏览器内通过 WebAssembly 完成,文件不离开你的设备。"
+      },
+      "engines": {
+        "title": "三大引擎",
+        "description": "ImageMagick、FFmpeg、Pandoc 覆盖图片、音视频与文档全部主流格式。"
+      },
+      "platforms": {
+        "title": "全平台",
+        "description": "Web 在线版与 Windows / macOS / Ubuntu 桌面客户端,体验一致。"
+      }
+    }
+  },
+  "common": {
+    "comingSoon": "即将推出",
+    "open": "打开",
+    "close": "关闭",
+    "cancel": "取消",
+    "confirm": "确认"
+  },
+  "footer": {
+    "copyright": "© 2026 OmniConvert",
+    "tagline": "隐私优先 · 本地处理 · 开源免费"
   }
 }
