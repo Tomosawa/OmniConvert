@@ -1,12 +1,4 @@
 /// <reference lib="webworker" />
-/**
- * ImageMagick Web Worker.
- *
- * Loads the magick-wasm module on first use, then processes `convert` requests
- * from the main thread. We deliberately keep this worker tiny — all the
- * branching (engine selection, queue, retry, etc.) lives in the main thread
- * stores so the worker stays trivially restartable.
- */
 import {
   ImageMagick,
   MagickFormat,
@@ -21,13 +13,53 @@ import type {
   ImageWorkerOutbound,
 } from '@/types/imageOptions'
 
-let initPromise: Promise<void> | null = null
+const logPrefix = '[omni:image-worker]'
 
-function ensureInit(): Promise<void> {
+function logDebug(...args: unknown[]): void {
+  console.log(logPrefix, ...args)
+}
+function logError(...args: unknown[]): void {
+  console.error(logPrefix, ...args)
+}
+
+let initPromise: Promise<void> | null = null
+let preloadedWasmBuffer: ArrayBuffer | null = null
+
+/** Initialize with a preloaded ArrayBuffer (skips network fetch). */
+function ensureInitFromBuffer(buffer: ArrayBuffer): Promise<void> {
   if (!initPromise) {
-    initPromise = initializeImageMagick(new URL(wasmUrl, self.location.href))
+    logDebug('initializing ImageMagick WASM from preloaded buffer...')
+    initPromise = initializeImageMagick(buffer).then(() => {
+      logDebug('ImageMagick WASM initialized (from preload)')
+    }).catch((e) => {
+      logError('ImageMagick WASM init failed', e)
+      initPromise = null
+      throw e
+    })
   }
   return initPromise
+}
+
+/** Initialize by fetching the WASM URL (fallback when no preload). */
+function ensureInitFromUrl(): Promise<void> {
+  if (!initPromise) {
+    logDebug('initializing ImageMagick WASM from URL...')
+    initPromise = initializeImageMagick(new URL(wasmUrl, self.location.href)).then(() => {
+      logDebug('ImageMagick WASM initialized (from URL)')
+    }).catch((e) => {
+      logError('ImageMagick WASM init failed', e)
+      initPromise = null
+      throw e
+    })
+  }
+  return initPromise
+}
+
+function ensureInit(): Promise<void> {
+  if (preloadedWasmBuffer) {
+    return ensureInitFromBuffer(preloadedWasmBuffer)
+  }
+  return ensureInitFromUrl()
 }
 
 const post = (msg: ImageWorkerOutbound, transfer: Transferable[] = []) => {
@@ -75,6 +107,8 @@ async function convert(req: ImageConvertRequest): Promise<void> {
   const opts: ImageOptions = req.options
   const bytes = new Uint8Array(req.buffer)
 
+  logDebug('convert', { id: req.id, source: req.sourceExt, target: req.targetExt, inputSize: bytes.byteLength })
+
   await ImageMagick.read(bytes, sourceFormat, async (image) => {
     post({ type: 'progress', id: req.id, progress: 35 })
 
@@ -106,24 +140,36 @@ async function convert(req: ImageConvertRequest): Promise<void> {
       out.set(data)
       post({ type: 'progress', id: req.id, progress: 100 })
       const mime = MIME_BY_EXT[req.targetExt.toLowerCase()] ?? 'application/octet-stream'
+      logDebug('convert done', { id: req.id, outputSize: out.byteLength, mime })
       post({ type: 'done', id: req.id, buffer: out.buffer, mime }, [out.buffer])
     })
   })
 }
 
-self.addEventListener('message', async (event: MessageEvent<ImageConvertRequest>) => {
-  const req = event.data
-  if (req?.type !== 'convert') return
+self.addEventListener('message', async (event: MessageEvent) => {
+  const msg = event.data
+
+  // Handle preloaded WASM binary from main thread
+  if (msg?.type === 'init-wasm') {
+    preloadedWasmBuffer = msg.buffer as ArrayBuffer
+    logDebug('received preloaded WASM buffer', { size: preloadedWasmBuffer.byteLength })
+    // Eagerly initialize now that we have the buffer
+    ensureInit().catch(() => {})
+    return
+  }
+
+  if (msg?.type !== 'convert') return
   try {
-    await convert(req)
+    await convert(msg as ImageConvertRequest)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    post({ type: 'error', id: req.id, message })
+    logError('convert failed', { id: msg.id, message }, err)
+    post({ type: 'error', id: msg.id, message })
   }
 })
 
 // Hint to the main thread that the worker module is loaded. Actual WASM init
-// is lazy and happens on the first `convert` call.
+// is lazy and happens on the first `convert` call (or when preloaded buffer arrives).
 post({ type: 'ready' })
 
 // Suppress "unused variable" for Percentage which we may use later.

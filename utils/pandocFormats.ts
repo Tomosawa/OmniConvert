@@ -49,6 +49,7 @@ const MIME_BY_EXT: Readonly<Record<string, string>> = {
   rst: 'text/x-rst',
   txt: 'text/plain',
   org: 'text/plain',
+  pdf: 'application/pdf',
 }
 
 export function readerFor(ext: string): string | null {
@@ -76,6 +77,8 @@ export interface PandocConvertOptions {
   inputFile?: string
   /** Optional output filename (required for binary writers). */
   outputFile?: string
+  /** Whether the source is a binary format that may embed media (docx/epub). */
+  extractMedia?: boolean
   /** Domain-level options the user toggled. */
   doc?: DocumentOptions
 }
@@ -94,6 +97,7 @@ export function buildPandocOptions(args: PandocConvertOptions): Record<string, u
   }
   if (args.inputFile) opts['input-files'] = [args.inputFile]
   if (args.outputFile) opts['output-file'] = args.outputFile
+  if (args.extractMedia) opts['extract-media'] = '/media'
   if (args.doc?.standalone) opts.standalone = true
   if (args.doc?.toc) opts.toc = true
   if (args.doc?.css) opts.css = [args.doc.css]

@@ -1,0 +1,63 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Node modules
+node_modules
+.pnpm-store
+
+# Build outputs
+.output
+.nuxt
+.nitro
+.cache
+dist
+
+# Tauri build outputs (会在 CI 中单独构建)
+src-tauri/target
+src-tauri/binaries
+src-tauri/icons
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Testing
+coverage
+.nyc_output
+
+# Environment files (安全考虑)
+.env
+.env.*
+!.env.example
+
+# Documentation
+docs
+*.md
+!README.md
+
+# CI/CD (镜像中不需要)
+.github
+
+# Docker files (避免循环)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Misc
+*.tar
+*.tar.gz
+*.zip

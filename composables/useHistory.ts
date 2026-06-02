@@ -1,4 +1,7 @@
 import { type DBSchema, type IDBPDatabase, openDB } from 'idb'
+import { createLogger } from '@/utils/logger'
+
+const log = createLogger('history')
 
 export interface HistoryRecord {
   id: string
@@ -9,7 +12,7 @@ export interface HistoryRecord {
   sizeBytes: number
   outputBytes: number
   durationMs: number
-  status: 'success' | 'error'
+  status: 'success' | 'error' | 'cancelled'
   error?: string
   completedAt: number
 }
@@ -70,9 +73,10 @@ export function useHistory() {
     try {
       const db = await getDb()
       await db.put(STORE, record)
+      log.debug('append', { id: record.id, fileName: record.fileName, status: record.status })
       await prune(db)
     } catch (err) {
-      console.warn('[history] append failed', err)
+      log.error('append failed', { id: record.id, fileName: record.fileName }, err)
     }
   }
 
@@ -81,8 +85,10 @@ export function useHistory() {
     try {
       const db = await getDb()
       const all = await db.getAllFromIndex(STORE, 'by-completedAt')
+      log.debug('list', { total: all.length, limit })
       return all.reverse().slice(0, limit)
-    } catch {
+    } catch (err) {
+      log.error('list failed', err)
       return []
     }
   }
@@ -92,8 +98,9 @@ export function useHistory() {
     try {
       const db = await getDb()
       await db.delete(STORE, id)
-    } catch {
-      /* swallow */
+      log.debug('remove', { id })
+    } catch (err) {
+      log.error('remove failed', { id }, err)
     }
   }
 
@@ -102,8 +109,9 @@ export function useHistory() {
     try {
       const db = await getDb()
       await db.clear(STORE)
-    } catch {
-      /* swallow */
+      log.info('cleared all history')
+    } catch (err) {
+      log.error('clear failed', err)
     }
   }
 

@@ -1,8 +1,19 @@
 /**
  * Locale codes supported by OmniConvert.
- * Phase 1 ships zh-CN + en; Phase 7 will extend this to 11 locales.
+ * Phase 7 brings the full 11-language roster online.
  */
-export type LocaleCode = 'zh-CN' | 'en'
+export type LocaleCode =
+  | 'zh-CN'
+  | 'zh-TW'
+  | 'en'
+  | 'fr'
+  | 'de'
+  | 'es'
+  | 'ru'
+  | 'ja'
+  | 'ko'
+  | 'it'
+  | 'pt'
 
 export interface LocaleDescriptor {
   code: LocaleCode

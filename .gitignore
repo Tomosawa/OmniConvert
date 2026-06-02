@@ -43,6 +43,7 @@ Thumbs.db
 src-tauri/target
 src-tauri/Cargo.lock
 src-tauri/gen
+src-tauri/binaries/
 
 # Vercel
 .vercel

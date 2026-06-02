@@ -1,0 +1,215 @@
+{
+  "app": {
+    "name": "OmniConvert",
+    "tagline": "Convertitore di file all-in-one local-first — ogni conversione avviene nel browser, i tuoi file non lasciano mai il dispositivo.",
+    "version": "Versione {version}"
+  },
+  "nav": {
+    "home": "Home",
+    "history": "Cronologia",
+    "convert": "Converti"
+  },
+  "theme": {
+    "label": "Tema",
+    "light": "Chiaro",
+    "dark": "Scuro",
+    "system": "Sistema",
+    "toggle": "Cambia tema"
+  },
+  "language": {
+    "label": "Lingua",
+    "toggle": "Cambia lingua"
+  },
+  "upload": {
+    "heading": "Carica file",
+    "description": "Trascina qui i file o clicca per selezionarli. Tutto è elaborato localmente — nulla viene caricato.",
+    "dropHere": "Rilascia i file per caricarli",
+    "browse": "Scegli file",
+    "browseHint": "Supporta i formati comuni di immagini, audio/video e documenti",
+    "addMore": "Aggiungi altri file",
+    "clearAll": "Cancella tutto",
+    "selected": "{count} file selezionati"
+  },
+  "convert": {
+    "title": "Conversione file",
+    "start": "Avvia conversione",
+    "running": "Conversione...",
+    "noEligible": "Scegli un formato di destinazione per almeno un file",
+    "back": "Indietro",
+    "newTask": "Nuova attività",
+    "allDone": "Tutte le conversioni completate!",
+    "partialDone": "Alcune conversioni completate",
+    "successCount": "riuscite",
+    "failedCount": "fallite",
+    "batchSetting": "Impostazioni batch",
+    "batchCategory": "Categoria:",
+    "batchApply": "Applica a tutti",
+    "step": {
+      "upload": "Seleziona",
+      "configure": "Configura",
+      "progress": "Conversione",
+      "result": "Completato"
+    }
+  },
+  "task": {
+    "heading": "Attività di conversione",
+    "clear": "Cancella attività",
+    "retry": "Riprova",
+    "download": "Scarica",
+    "outputSize": "output",
+    "failedCount": "{n} fallite",
+    "status": {
+      "pending": "In attesa",
+      "running": "Conversione",
+      "success": "Completata",
+      "error": "Fallita",
+      "cancelled": "Annullata"
+    },
+    "cancel": "Annulla conversione",
+    "error": {
+      "generic": "Conversione fallita — riprova o controlla il file"
+    }
+  },
+  "batch": {
+    "download": "Scarica",
+    "downloadZip": "Scarica {n} file (ZIP)",
+    "packing": "Compressione..."
+  },
+  "history": {
+    "description": "La cronologia conserva solo i metadati (nome file, formati, dimensioni, durata). Il contenuto del file non viene mai mantenuto.",
+    "loading": "Caricamento...",
+    "empty": "Nessuna conversione finora",
+    "clearAll": "Cancella tutto"
+  },
+  "imageOptions": {
+    "heading": "Opzioni immagine",
+    "quality": "Qualità",
+    "resize": "Ridimensiona",
+    "width": "Larghezza",
+    "height": "Altezza",
+    "stripMetadata": "Rimuovi metadati",
+    "original": "Dimensioni originali",
+    "lockAspect": "Blocca proporzioni",
+    "unlockAspect": "Sblocca proporzioni",
+    "resetToOriginal": "Ripristina dimensioni originali",
+    "clearResize": "Cancella ridimensionamento"
+  },
+  "mediaOptions": {
+    "heading": "Opzioni audio/video",
+    "audioHeading": "Opzioni audio",
+    "videoSection": "Impostazioni video",
+    "audioSection": "Impostazioni audio",
+    "videoCodec": "Codec video",
+    "videoProfile": "Profilo codec",
+    "videoPreset": "Preset di codifica",
+    "videoBitrate": "Bitrate video",
+    "rateControl": "Controllo bitrate",
+    "bitrate": "Bitrate",
+    "crfHint": "più basso = migliore qualità",
+    "gopSize": "Intervallo keyframe",
+    "fps": "Frame al secondo",
+    "pixFmt": "Formato pixel",
+    "resolution": "Risoluzione",
+    "width": "Larghezza",
+    "height": "Altezza",
+    "enableAudio": "Abilita audio",
+    "audioDisabled": "Uscita audio disabilitata",
+    "audioCodec": "Codec audio",
+    "audioBitrate": "Bitrate audio",
+    "rateMode": "Modalità di codifica",
+    "vbrQuality": "Qualità VBR",
+    "sampleRate": "Frequenza di campionamento",
+    "bitDepth": "Profondità bit",
+    "channels": "Canali",
+    "channel_mono": "Mono",
+    "channel_stereo": "Stereo",
+    "channel_joint_stereo": "Joint Stereo",
+    "channel_5.1": "5.1 Surround",
+    "channel_7.1": "7.1 Surround",
+    "auto": "Auto",
+    "original": "Originale",
+    "resetToOriginal": "Ripristina",
+    "clearResolution": "Cancella",
+    "lockAspect": "Blocca proporzioni",
+    "unlockAspect": "Sblocca proporzioni"
+  },
+  "documentOptions": {
+    "heading": "Opzioni documento",
+    "standalone": "Documento autonomo (completo)",
+    "toc": "Genera indice",
+    "css": "URL del foglio di stile",
+    "cssPlaceholder": "es. https://example.com/style.css"
+  },
+  "fileCard": {
+    "convertTo": "Converti in",
+    "selectTarget": "Seleziona formato di destinazione",
+    "remove": "Rimuovi",
+    "magicMismatch": "L'estensione non corrisponde al contenuto del file",
+    "unknownFormat": "Formato non riconosciuto",
+    "noTargets": "Nessun formato di destinazione disponibile",
+    "category": {
+      "image": "Immagine",
+      "media": "Audio/Video",
+      "document": "Documento",
+      "unknown": "Sconosciuto"
+    }
+  },
+  "largeFile": {
+    "badge": "File grande",
+    "title": "Usa l'app desktop per file di grandi dimensioni",
+    "description": "Questo file supera {threshold}. La conversione nel browser potrebbe fallire per i limiti di memoria. L'app desktop usa strumenti CLI nativi e gestisce file di dimensioni in GB in modo affidabile.",
+    "continue": "Prova comunque nel browser",
+    "downloadDesktop": "Scarica desktop"
+  },
+  "common": {
+    "comingSoon": "Prossimamente",
+    "open": "Apri",
+    "close": "Chiudi",
+    "cancel": "Annulla",
+    "confirm": "Conferma"
+  },
+  "wasm": {
+    "inlineTitle": "Loading conversion engines…",
+    "engineLoading": "Engine loading"
+  },
+  "footer": {
+    "copyright": "© 2026 OmniConvert",
+    "tagline": "Privacy prima di tutto · Locale · Open source"
+  },
+  "landing": {
+    "tagline": "Convertitore di file all-in-one locale — ogni conversione avviene nel tuo browser, i file non lasciano mai il tuo dispositivo.",
+    "conversionCount": "Supporta {n} percorsi di conversione formato",
+    "startWeb": "Usa versione Web",
+    "downloadClient": "Scarica client",
+    "feature": {
+      "privacy": {
+        "title": "Zero caricamenti",
+        "description": "Tutte le conversioni vengono eseguite nel browser tramite WebAssembly — i file non lasciano mai il tuo dispositivo."
+      },
+      "engines": {
+        "title": "Tre motori",
+        "description": "ImageMagick, FFmpeg e Pandoc coprono insieme tutti i formati comuni di immagine, audio/video e documento."
+      },
+      "platforms": {
+        "title": "Tutte le piattaforme",
+        "description": "Stessa esperienza sul web e sulle app desktop Windows / macOS / Linux."
+      }
+    },
+    "formats": {
+      "title": "Formati supportati",
+      "subtitle": "Immagini, audio/video e documenti",
+      "image": "Immagini",
+      "media": "Audio/Video",
+      "document": "Documenti",
+      "unit": "formati",
+      "clientOnly": "Solo client"
+    },
+    "howItWorks": {
+      "title": "Come funziona",
+      "step1": "Seleziona file",
+      "step2": "Imposta opzioni",
+      "step3": "Converti",
+      "step4": "Scarica"
+    }
+  }
+}

@@ -1,10 +1,14 @@
 # Phase 8 — Tauri 桌面端
 
-> 前置: Phase 6 · 输出: Win/macOS/Ubuntu 三平台桌面应用
+> 前置: Phase 6 · 输出: Win/macOS/Linux 三平台桌面应用
 
 ## 目标
 
-把 Web 项目用 Tauri 2.0 封装为桌面应用,通过 Sidecar 调用原生 CLI(ImageMagick / FFmpeg / Pandoc),发挥原生性能、突破 WASM 内存限制。
+把 Web 项目用 Tauri 2.0 封装为桌面应用,通过 Sidecar 调用原生 CLI(ImageMagick / FFmpeg / Pandoc),发挥原生性能、多线程、突破 WASM 内存限制。
+
+## 页面适配
+页面内容参考 Web 版本，首页介绍和客户端下载界面什么的不需要，打开就是选择文件界面。
+在操作逻辑上，页面布局上，需要适合客户端的操作。
 
 ## Checklist
 
@@ -23,7 +27,6 @@
   - `imagemagick-x86_64-apple-darwin` / `imagemagick-aarch64-apple-darwin` / `imagemagick-x86_64-pc-windows-msvc.exe` / `imagemagick-x86_64-unknown-linux-gnu`
   - 对 ffmpeg / pandoc 同样命名规范
 - [ ] `tauri.conf.json` 中 `bundle.externalBin` 指向上述路径(去掉平台后缀,Tauri 自动加)
-- [ ] 评估包体积影响,大于 200MB 考虑按需下载方案
 
 ### 平台分流
 - [ ] `composables/usePlatform.ts`:
@@ -56,7 +59,7 @@
 
 ### PDF 补齐(Phase 5 留下的坑)
 - [ ] 桌面版 Pandoc CLI 配合 LaTeX 实现完整 PDF 输出
-- [ ] 检测系统是否安装 LaTeX,未装时弹出引导(macOS: MacTeX / Windows: MiKTeX / Ubuntu: texlive)
+- [ ] LaTeX的二进制看最好可以融入到安装包里软件里，免得用户还需要去单独下载很麻烦体验差，或者实现不了的话，还有啥其他的方式实现Pdf都可以考虑。
 
 ### 原生增强
 - [ ] 拖文件到 Dock/任务栏图标可打开(`tauri.conf.json` 的 `app.windows.fileDropEnabled`)

@@ -3,18 +3,23 @@
  * Phase 2 wires this to actual detection logic; placeholder here keeps
  * downstream stores type-stable.
  */
+import type { MediaMetadata } from '@/types/mediaOptions'
+
 export type FileCategory = 'image' | 'media' | 'document' | 'unknown'
 
+export interface ImageDimensions {
+  width: number
+  height: number
+}
+
 export interface DetectedFile {
-  /** Original browser File handle. */
   file: File
   category: FileCategory
-  /** MIME type as resolved by detection (best-effort, may be empty). */
   mime: string
-  /** Lowercase extension without leading dot. */
   ext: string
-  /** Whether the magic-number probe matched the extension. */
   magicMatch: boolean
+  imageDimensions?: ImageDimensions
+  mediaMetadata?: MediaMetadata
 }
 
 export interface FileItem {

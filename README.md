@@ -10,7 +10,7 @@ OmniConvert 解决一件事:**安全、免费、全能地转换你的本地文�
 
 - 隐私安全:所有转换在浏览器或桌面端本地完成,文件不离开你的设备
 - 三大引擎:[ImageMagick](https://imagemagick.org)(图片)、[FFmpeg](https://ffmpeg.org)(音视频)、[Pandoc](https://pandoc.org)(文档)
-- 全平台:Web 在线版 + Windows / macOS / Ubuntu 桌面版(Tauri 2.0)
+- 全平台:Web 在线版 + Windows / macOS / Linux 桌面版(Tauri 2.0)
 - 现代体验:深浅色主题、11 种语言、批量队列、历史记录、ZIP 打包下载
 
 完整需求请见 [docs/prd/OmniConv-prd.md](docs/prd/OmniConv-prd.md)。

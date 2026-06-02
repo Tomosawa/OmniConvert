@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import {
-  AUDIO_BITRATES,
-  FRAME_RATES,
-  SAMPLE_RATES,
-  VIDEO_BITRATES,
   buildFfmpegArgs,
+  formatSupportsBitDepth,
+  formatSupportsBitrate,
+  getAudioBitrates,
+  getBitDepths,
+  getSampleRates,
   targetKind,
   targetMime,
 } from '@/utils/ffmpegArgs'
@@ -74,6 +75,50 @@ describe('utils/ffmpegArgs#buildFfmpegArgs — audio targets', () => {
     expect(args).toContain('-ar')
     expect(args).toContain('48000')
   })
+
+  it('applies bitDepth for wav — 24-bit uses pcm_s24le', () => {
+    const args = buildFfmpegArgs({
+      inputName: 'in.flac',
+      outputName: 'out.wav',
+      targetExt: 'wav',
+      options: { bitDepth: 24 },
+    })
+    expect(args).toContain('pcm_s24le')
+  })
+
+  it('applies bitDepth for wav — 32-bit uses pcm_f32le', () => {
+    const args = buildFfmpegArgs({
+      inputName: 'in.wav',
+      outputName: 'out.wav',
+      targetExt: 'wav',
+      options: { bitDepth: 32 },
+    })
+    expect(args).toContain('pcm_f32le')
+  })
+
+  it('always re-encodes for audio-only targets (mp3→flac with no options)', () => {
+    const args = buildFfmpegArgs({
+      inputName: 'in.mp3',
+      outputName: 'out.flac',
+      targetExt: 'flac',
+      options: {},
+    })
+    expect(args).toContain('-vn')
+    expect(args).toContain('-c:a')
+    expect(args).toContain('flac')
+    expect(args).not.toContain('copy')
+  })
+
+  it('applies bitDepth for flac — 32-bit adds sample_fmt', () => {
+    const args = buildFfmpegArgs({
+      inputName: 'in.wav',
+      outputName: 'out.flac',
+      targetExt: 'flac',
+      options: { bitDepth: 32 },
+    })
+    expect(args).toContain('-sample_fmt')
+    expect(args).toContain('s32')
+  })
 })
 
 describe('utils/ffmpegArgs#buildFfmpegArgs — video targets', () => {
@@ -112,15 +157,43 @@ describe('utils/ffmpegArgs#buildFfmpegArgs — video targets', () => {
     expect(args[vfIdx + 1]).toBe('scale=1280:720,fps=30')
   })
 
-  it('audioOnly=true on a video target still drops video', () => {
+  it('enableAudio=false on a video target adds -an to drop audio', () => {
     const args = buildFfmpegArgs({
       inputName: 'in.mp4',
       outputName: 'out.mp4',
       targetExt: 'mp4',
-      options: { audioOnly: true },
+      options: { enableAudio: false },
     })
-    expect(args).toContain('-vn')
-    expect(args).not.toContain('libx264')
+    expect(args).toContain('-an')
+    expect(args).not.toContain('-c:a')
+  })
+
+  it('default (enableAudio undefined) includes audio stream for video targets', () => {
+    const args = buildFfmpegArgs({
+      inputName: 'in.mp4',
+      outputName: 'out.mp4',
+      targetExt: 'mp4',
+      options: {},
+    })
+    expect(args).not.toContain('-an')
+    expect(args).toContain('-c:a')
+  })
+
+  it('libx265 sets -pix_fmt yuv420p, -threads 1, and -x265-params', () => {
+    const args = buildFfmpegArgs({
+      inputName: 'in.mp4',
+      outputName: 'out.mp4',
+      targetExt: 'mp4',
+      options: { videoCodec: 'libx265' },
+    })
+    expect(args).toContain('libx265')
+    expect(args).toContain('-pix_fmt')
+    expect(args).toContain('yuv420p')
+    expect(args).toContain('-threads')
+    expect(args).toContain('1')
+    expect(args).toContain('-x265-params')
+    const paramsIdx = args.indexOf('-x265-params')
+    expect(args[paramsIdx + 1]).toContain('frame-threads=1')
   })
 
   it('respects videoBitrate', () => {
@@ -135,11 +208,39 @@ describe('utils/ffmpegArgs#buildFfmpegArgs — video targets', () => {
   })
 })
 
-describe('utils/ffmpegArgs constants', () => {
-  it('exposes non-empty bitrate / fps / sample rate suggestions', () => {
-    expect(AUDIO_BITRATES.length).toBeGreaterThan(0)
-    expect(VIDEO_BITRATES.length).toBeGreaterThan(0)
-    expect(SAMPLE_RATES.length).toBeGreaterThan(0)
-    expect(FRAME_RATES.length).toBeGreaterThan(0)
+describe('utils/ffmpegArgs — format-specific helpers', () => {
+  it('getAudioBitrates returns correct lists per format', () => {
+    expect(getAudioBitrates('mp3')).toEqual(['64k', '96k', '128k', '160k', '192k', '256k', '320k'])
+    expect(getAudioBitrates('wav')).toEqual([])
+    expect(getAudioBitrates('flac')).toEqual([])
+    expect(getAudioBitrates('ogg').length).toBeGreaterThan(5)
+  })
+
+  it('getSampleRates returns correct lists per format', () => {
+    expect(getSampleRates('mp3')).toEqual([22050, 32000, 44100, 48000])
+    expect(getSampleRates('flac')).toContain(192000)
+    expect(getSampleRates('flac')).toContain(384000)
+    expect(getSampleRates('wav')).toContain(176400)
+  })
+
+  it('getBitDepths returns correct lists per format', () => {
+    expect(getBitDepths('wav')).toEqual([16, 24, 32])
+    expect(getBitDepths('flac')).toEqual([16, 24, 32])
+    expect(getBitDepths('mp3')).toEqual([])
+    expect(getBitDepths('ogg')).toEqual([16])
+  })
+
+  it('formatSupportsBitrate works correctly', () => {
+    expect(formatSupportsBitrate('mp3')).toBe(true)
+    expect(formatSupportsBitrate('wav')).toBe(false)
+    expect(formatSupportsBitrate('flac')).toBe(false)
+    expect(formatSupportsBitrate('aac')).toBe(true)
+  })
+
+  it('formatSupportsBitDepth works correctly', () => {
+    expect(formatSupportsBitDepth('wav')).toBe(true)
+    expect(formatSupportsBitDepth('flac')).toBe(true)
+    expect(formatSupportsBitDepth('mp3')).toBe(false)
+    expect(formatSupportsBitDepth('ogg')).toBe(true)
   })
 })

@@ -3,6 +3,9 @@ import { computed, ref } from 'vue'
 import type { ConversionTask } from '@/types/conversion'
 import type { DetectedFile, FileItem } from '@/types/file'
 import { uid } from '@/utils/fileSize'
+import { createLogger } from '@/utils/logger'
+
+const log = createLogger('store')
 
 /**
  * Conversion store — single source of truth for both staged file items
@@ -15,6 +18,7 @@ import { uid } from '@/utils/fileSize'
 export type ConversionRunner = (
   task: ConversionTask,
   onProgress: (n: number) => void,
+  signal: AbortSignal,
 ) => Promise<{ blob: Blob }>
 
 /** Hook fired after every task settles (success or error). Lets the UI
@@ -48,12 +52,16 @@ export const useConversionStore = defineStore('conversion', () => {
       targetFormat: null,
     }
     items.value.push(item)
+    log.info('addDetected', { id: item.id, name: detected.file.name, ext: detected.ext, category: detected.category })
     return item
   }
 
   function removeItem(id: string): void {
     const idx = items.value.findIndex((i) => i.id === id)
-    if (idx !== -1) items.value.splice(idx, 1)
+    if (idx !== -1) {
+      log.debug('removeItem', { id })
+      items.value.splice(idx, 1)
+    }
   }
 
   function setTargetFormat(id: string, format: string | null): void {
@@ -120,10 +128,20 @@ export const useConversionStore = defineStore('conversion', () => {
   async function startConversion(): Promise<void> {
     if (!runner) throw new Error('Conversion runner not configured')
 
+    for (const t of tasks.value) {
+      if (t.resultUrl) URL.revokeObjectURL(t.resultUrl)
+    }
+    tasks.value = []
+
     const eligible = items.value.filter(
       (item) => item.targetFormat && item.detected.category !== 'unknown',
     )
-    if (eligible.length === 0) return
+    if (eligible.length === 0) {
+      log.warn('startConversion: no eligible items (need targetFormat + known category)')
+      return
+    }
+
+    log.info('startConversion', { count: eligible.length, concurrency: concurrency.value })
 
     for (const item of eligible) {
       const target = item.targetFormat
@@ -136,6 +154,7 @@ export const useConversionStore = defineStore('conversion', () => {
         progress: 0,
       }
       tasks.value.push(task)
+      log.debug('task created', { id: task.id, file: item.detected.file.name, target })
     }
 
     await drain()
@@ -156,24 +175,37 @@ export const useConversionStore = defineStore('conversion', () => {
     task.status = 'running'
     task.startedAt = Date.now()
     task.progress = 0
+    const controller = new AbortController()
+    task.abortController = controller
+    log.info('task start', { id: task.id, file: task.fileItem.detected.file.name, target: task.targetFormat })
     try {
       const { blob } = await fn(task, (n) => {
         task.progress = Math.max(task.progress, Math.min(100, Math.round(n)))
-      })
+      }, controller.signal)
       task.resultBlob = blob
       task.resultUrl = URL.createObjectURL(blob)
       task.progress = 100
       task.status = 'success'
       task.completedAt = Date.now()
+      const elapsed = task.completedAt - (task.startedAt ?? task.completedAt)
+      log.info('task success', { id: task.id, file: task.fileItem.detected.file.name, size: blob.size, elapsedMs: elapsed })
     } catch (err) {
-      task.status = 'error'
-      task.error = err instanceof Error ? err.message : String(err)
+      if (controller.signal.aborted) {
+        task.status = 'cancelled'
+        task.error = '转换已取消'
+      } else {
+        task.status = 'error'
+        task.error = err instanceof Error ? err.message : String(err)
+      }
       task.completedAt = Date.now()
+      const elapsed = task.completedAt - (task.startedAt ?? task.completedAt)
+      log.info('task ended', { id: task.id, file: task.fileItem.detected.file.name, status: task.status, error: task.error, elapsedMs: elapsed })
     } finally {
+      task.abortController = undefined
       try {
         onFinished?.(task)
       } catch (err) {
-        console.warn('[conversion] finished hook failed', err)
+        log.warn('finished hook failed', err)
       }
       void drain()
     }
@@ -182,10 +214,37 @@ export const useConversionStore = defineStore('conversion', () => {
   function retry(taskId: string): void {
     const task = tasks.value.find((t) => t.id === taskId)
     if (!task || task.status !== 'error') return
+    log.info('task retry', { id: taskId, file: task.fileItem.detected.file.name })
     task.status = 'pending'
     task.error = undefined
     task.progress = 0
     void drain()
+  }
+
+  function cancelTask(taskId: string): void {
+    const task = tasks.value.find((t) => t.id === taskId)
+    if (!task) return
+    if (task.status === 'running' && task.abortController) {
+      log.info('task cancel (running)', { id: taskId, file: task.fileItem.detected.file.name })
+      task.abortController.abort()
+    } else if (task.status === 'pending') {
+      log.info('task cancel (pending)', { id: taskId, file: task.fileItem.detected.file.name })
+      task.status = 'cancelled'
+      task.error = '转换已取消'
+      task.completedAt = Date.now()
+    }
+  }
+
+  function cancelAll(): void {
+    for (const task of tasks.value) {
+      if (task.status === 'running' && task.abortController) {
+        task.abortController.abort()
+      } else if (task.status === 'pending') {
+        task.status = 'cancelled'
+        task.error = '转换已取消'
+        task.completedAt = Date.now()
+      }
+    }
   }
 
   return {
@@ -221,5 +280,7 @@ export const useConversionStore = defineStore('conversion', () => {
     setConcurrency,
     startConversion,
     retry,
+    cancelTask,
+    cancelAll,
   }
 })

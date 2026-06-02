@@ -105,4 +105,23 @@ describe('utils/pandocFormats#buildPandocOptions', () => {
     })
     expect(opts.css).toBeUndefined()
   })
+
+  it('adds extract-media when extractMedia is true', () => {
+    const opts = buildPandocOptions({
+      from: 'docx',
+      to: 'markdown',
+      inputFile: 'in.docx',
+      extractMedia: true,
+    })
+    expect(opts['extract-media']).toBe('/media')
+  })
+
+  it('omits extract-media when extractMedia is false', () => {
+    const opts = buildPandocOptions({
+      from: 'markdown',
+      to: 'html',
+      extractMedia: false,
+    })
+    expect(opts['extract-media']).toBeUndefined()
+  })
 })

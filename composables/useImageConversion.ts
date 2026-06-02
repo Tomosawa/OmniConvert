@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, toRaw } from 'vue'
 import type {
   ImageConvertRequest,
   ImageOptions,
@@ -108,7 +108,7 @@ export function useImageConversion() {
         buffer,
         sourceExt: args.sourceExt.toLowerCase(),
         targetExt,
-        options: args.options ?? {},
+        options: JSON.parse(JSON.stringify(toRaw(args.options) ?? {})),
       }
       worker.postMessage(req, [buffer])
     })

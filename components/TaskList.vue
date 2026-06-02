@@ -6,6 +6,7 @@ import {
   Loader2,
   RotateCw,
   Trash2,
+  XCircle,
 } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
@@ -126,6 +127,14 @@ const summary = computed(() => ({
               <AlertTriangle class="h-3 w-3" />
               {{ t('task.status.error') }}
             </Badge>
+            <Badge
+              v-else-if="task.status === 'cancelled'"
+              variant="outline"
+              class="gap-1 text-xs"
+            >
+              <XCircle class="h-3 w-3" />
+              {{ t('task.status.cancelled') }}
+            </Badge>
           </div>
         </div>
 
@@ -142,6 +151,16 @@ const summary = computed(() => ({
         </p>
 
         <div class="flex flex-wrap items-center justify-end gap-2">
+          <Button
+            v-if="task.status === 'running' || task.status === 'pending'"
+            size="sm"
+            variant="ghost"
+            class="gap-2"
+            :title="t('task.cancel')"
+            @click="store.cancelTask(task.id)"
+          >
+            <XCircle class="h-3.5 w-3.5" />
+          </Button>
           <Button
             v-if="task.status === 'error'"
             size="sm"

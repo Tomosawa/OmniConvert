@@ -9,7 +9,7 @@
     "node": ">=20.11"
   },
   "scripts": {
-    "dev": "nuxt dev",
+    "dev": "CHOKIDAR_USEPOLLING=true nuxt dev",
     "build": "nuxt build",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
@@ -20,9 +20,14 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "nuxt typecheck",
-    "format": "prettier --write \"**/*.{ts,vue,js,json,md}\""
+    "format": "prettier --write \"**/*.{ts,vue,js,json,md}\"",
+    "tauri": "tauri",
+    "tauri:dev": "nuxt generate && tauri dev",
+    "tauri:build": "tauri build",
+    "tauri:prepare-binaries": "node scripts/prepare-sidecar-binaries.mjs"
   },
   "dependencies": {
+    "@ffmpeg/core": "^0.12.6",
     "@ffmpeg/core-mt": "^0.12.10",
     "@ffmpeg/ffmpeg": "^0.12.15",
     "@ffmpeg/util": "^0.12.2",
@@ -30,6 +35,12 @@
     "@nuxtjs/color-mode": "^3.5.2",
     "@nuxtjs/i18n": "^9.1.1",
     "@pinia/nuxt": "^0.9.0",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-dialog": "^2",
+    "@tauri-apps/plugin-fs": "^2",
+    "@tauri-apps/plugin-notification": "^2",
+    "@tauri-apps/plugin-opener": "^2",
+    "@tauri-apps/plugin-shell": "^2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "fflate": "^0.8.3",
@@ -44,9 +55,20 @@
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@swc/core",
+      "esbuild",
+      "sharp",
+      "unrs-resolver",
+      "vue-demi"
+    ]
+  },
   "devDependencies": {
     "@nuxt/eslint": "^0.7.5",
     "@nuxt/test-utils": "^3.15.1",
+    "@tauri-apps/cli": "^2",
     "@types/node": "^22.10.0",
     "@vitejs/plugin-vue": "^5.2.4",
     "@vue/test-utils": "^2.4.6",
@@ -57,6 +79,7 @@
     "postcss": "^8.4.47",
     "postcss-import": "^16.1.0",
     "prettier": "^3.4.2",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.2",
     "vite-plugin-top-level-await": "^1.6.0",
