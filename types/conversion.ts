@@ -1,6 +1,6 @@
 import type { FileItem } from './file'
 
-export type ConversionStatus = 'pending' | 'running' | 'success' | 'error'
+export type ConversionStatus = 'pending' | 'running' | 'success' | 'error' | 'cancelled'
 
 export interface ConversionTask {
   id: string
@@ -19,4 +19,6 @@ export interface ConversionTask {
   /** Wall-clock timing for analytics / history. */
   startedAt?: number
   completedAt?: number
+  /** AbortController used to cancel a running task. */
+  abortController?: AbortController
 }

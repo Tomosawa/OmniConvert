@@ -1,0 +1,21 @@
+# OmniConvert Docker Compose
+# 启动: docker compose up -d
+# 日志: docker compose logs -f
+# 停止: docker compose down
+
+services:
+  omniconvert:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: omniconvert:latest
+    container_name: omniconvert
+    ports:
+      - "5000:3000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { Settings2 } from 'lucide-vue-next'
-import { computed } from 'vue'
+import { Link2, Link2Off, Settings2 } from 'lucide-vue-next'
+import { computed, ref, watch } from 'vue'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import type { ImageOptions } from '@/types/imageOptions'
+import type { ImageDimensions } from '@/types/file'
 
 interface Props {
   modelValue: ImageOptions
-  /** When true, show quality slider (lossy targets only). */
   qualityRelevant?: boolean
+  originalDimensions?: ImageDimensions
 }
 
 const props = withDefaults(defineProps<Props>(), {
   qualityRelevant: true,
+  originalDimensions: undefined,
 })
 
 const emits = defineEmits<{
@@ -33,13 +35,22 @@ const quality = computed({
   },
 })
 
+const aspectLocked = ref(true)
+const aspectRatio = computed(() => {
+  const d = props.originalDimensions
+  if (d && d.width > 0 && d.height > 0) return d.width / d.height
+  return 0
+})
+
 const widthValue = computed({
   get: () => String(props.modelValue.resize?.width ?? ''),
   set: (raw: string | number) => {
     const n = Number(raw) || 0
-    patch({
-      resize: { ...props.modelValue.resize, width: n > 0 ? n : undefined },
-    })
+    const resize = { ...props.modelValue.resize, width: n > 0 ? n : undefined }
+    if (n > 0 && aspectLocked.value && aspectRatio.value > 0) {
+      resize.height = Math.round(n / aspectRatio.value)
+    }
+    patch({ resize })
   },
 })
 
@@ -47,9 +58,11 @@ const heightValue = computed({
   get: () => String(props.modelValue.resize?.height ?? ''),
   set: (raw: string | number) => {
     const n = Number(raw) || 0
-    patch({
-      resize: { ...props.modelValue.resize, height: n > 0 ? n : undefined },
-    })
+    const resize = { ...props.modelValue.resize, height: n > 0 ? n : undefined }
+    if (n > 0 && aspectLocked.value && aspectRatio.value > 0) {
+      resize.width = Math.round(n * aspectRatio.value)
+    }
+    patch({ resize })
   },
 })
 
@@ -57,6 +70,31 @@ const stripValue = computed({
   get: () => props.modelValue.stripMetadata ?? false,
   set: (v: boolean) => patch({ stripMetadata: v }),
 })
+
+function fillOriginal(): void {
+  const d = props.originalDimensions
+  if (!d) return
+  patch({ resize: { width: d.width, height: d.height } })
+}
+
+function clearResize(): void {
+  patch({ resize: undefined })
+}
+
+const hasResize = computed(() => {
+  const r = props.modelValue.resize
+  return r && (r.width || r.height)
+})
+
+watch(
+  () => props.originalDimensions,
+  (dims) => {
+    if (dims && !hasResize.value) {
+      patch({ resize: { width: dims.width, height: dims.height } })
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -80,25 +118,60 @@ const stripValue = computed({
         <span class="text-right text-xs tabular-nums">{{ quality }}</span>
       </div>
 
-      <div class="grid grid-cols-[120px_1fr_8px_1fr] items-center gap-2">
-        <label class="text-xs text-muted-foreground">{{ t('imageOptions.resize') }}</label>
-        <Input
-          type="number"
-          min="0"
-          :model-value="widthValue"
-          :placeholder="t('imageOptions.width')"
-          class="h-8 text-xs"
-          @update:model-value="(v) => (widthValue = String(v))"
-        />
-        <span class="text-center text-xs text-muted-foreground">×</span>
-        <Input
-          type="number"
-          min="0"
-          :model-value="heightValue"
-          :placeholder="t('imageOptions.height')"
-          class="h-8 text-xs"
-          @update:model-value="(v) => (heightValue = String(v))"
-        />
+      <div>
+        <div class="mb-1.5 flex items-center justify-between">
+          <label class="text-xs text-muted-foreground">{{ t('imageOptions.resize') }}</label>
+          <span v-if="originalDimensions" class="text-xs text-muted-foreground">
+            {{ t('imageOptions.original') }}: {{ originalDimensions.width }} × {{ originalDimensions.height }}
+          </span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <Input
+            type="number"
+            min="1"
+            :model-value="widthValue"
+            :placeholder="t('imageOptions.width')"
+            class="h-8 flex-1 text-xs"
+            @update:model-value="(v) => (widthValue = String(v))"
+          />
+          <button
+            type="button"
+            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border transition-colors hover:bg-accent"
+            :title="aspectLocked ? t('imageOptions.unlockAspect') : t('imageOptions.lockAspect')"
+            @click="aspectLocked = !aspectLocked"
+          >
+            <Link2 v-if="aspectLocked" class="h-3.5 w-3.5 text-primary" />
+            <Link2Off v-else class="h-3.5 w-3.5 text-muted-foreground" />
+          </button>
+          <Input
+            type="number"
+            min="1"
+            :model-value="heightValue"
+            :placeholder="t('imageOptions.height')"
+            class="h-8 flex-1 text-xs"
+            @update:model-value="(v) => (heightValue = String(v))"
+          />
+        </div>
+
+        <div class="mt-1.5 flex gap-2">
+          <button
+            v-if="originalDimensions"
+            type="button"
+            class="text-xs text-primary underline-offset-2 hover:underline"
+            @click="fillOriginal"
+          >
+            {{ t('imageOptions.resetToOriginal') }}
+          </button>
+          <button
+            v-if="hasResize"
+            type="button"
+            class="text-xs text-muted-foreground underline-offset-2 hover:underline"
+            @click="clearResize"
+          >
+            {{ t('imageOptions.clearResize') }}
+          </button>
+        </div>
       </div>
 
       <div class="flex items-center justify-between">

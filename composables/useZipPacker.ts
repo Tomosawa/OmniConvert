@@ -1,4 +1,7 @@
 import { zip } from 'fflate'
+import { createLogger } from '@/utils/logger'
+
+const log = createLogger('zip')
 
 export interface PackEntry {
   name: string
@@ -16,22 +19,26 @@ export function useZipPacker() {
       throw new Error('No entries to pack')
     }
 
+    log.info('packing', { count: entries.length })
+
     const fileMap: Record<string, Uint8Array> = {}
     for (const entry of entries) {
       const buf = new Uint8Array(await entry.blob.arrayBuffer())
       const safe = sanitiseName(entry.name, fileMap)
+      log.debug('adding entry', { name: entry.name, safeName: safe, size: buf.byteLength })
       fileMap[safe] = buf
     }
 
     return new Promise<Blob>((resolve, reject) => {
       zip(fileMap, { level: 6 }, (err, data) => {
         if (err) {
+          log.error('zip failed', err)
           reject(err)
           return
         }
-        // Copy into a fresh ArrayBuffer; fflate may pool its output buffer.
         const copy = new Uint8Array(data.length)
         copy.set(data)
+        log.info('pack done', { outputSize: copy.byteLength })
         resolve(new Blob([copy.buffer], { type: 'application/zip' }))
       })
     })

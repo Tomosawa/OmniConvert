@@ -1,0 +1,215 @@
+{
+  "app": {
+    "name": "OmniConvert",
+    "tagline": "本地優先的全能檔案轉換器,所有轉換都在你的瀏覽器內完成,檔案永不上傳。",
+    "version": "版本 {version}"
+  },
+  "nav": {
+    "home": "首頁",
+    "history": "歷史記錄",
+    "convert": "轉換"
+  },
+  "theme": {
+    "label": "主題",
+    "light": "淺色",
+    "dark": "深色",
+    "system": "跟隨系統",
+    "toggle": "切換主題"
+  },
+  "language": {
+    "label": "語言",
+    "toggle": "切換語言"
+  },
+  "upload": {
+    "heading": "上傳檔案",
+    "description": "拖拽檔案到此處,或點擊選擇。所有檔案都在本機處理,不會被上傳。",
+    "dropHere": "拖放檔案到這裡上傳",
+    "browse": "選擇檔案",
+    "browseHint": "支援圖片、音視訊、文件等常見格式",
+    "addMore": "繼續新增檔案",
+    "clearAll": "清空全部",
+    "selected": "已選擇 {count} 個檔案"
+  },
+  "convert": {
+    "title": "檔案轉換",
+    "start": "開始轉換",
+    "running": "轉換中...",
+    "noEligible": "請至少為一個檔案選擇目標格式",
+    "back": "返回",
+    "newTask": "新任務",
+    "allDone": "全部轉換完成!",
+    "partialDone": "部分轉換完成",
+    "successCount": "個成功",
+    "failedCount": "個失敗",
+    "batchSetting": "批量設定",
+    "batchCategory": "選擇類別:",
+    "batchApply": "套用到全部",
+    "step": {
+      "upload": "選擇檔案",
+      "configure": "設定參數",
+      "progress": "轉換中",
+      "result": "完成"
+    }
+  },
+  "task": {
+    "heading": "轉換任務",
+    "clear": "清空任務",
+    "retry": "重試",
+    "download": "下載",
+    "outputSize": "輸出",
+    "failedCount": "{n} 個失敗",
+    "status": {
+      "pending": "等待中",
+      "running": "轉換中",
+      "success": "已完成",
+      "error": "失敗",
+      "cancelled": "已取消"
+    },
+    "cancel": "取消轉換",
+    "error": {
+      "generic": "轉換失敗,請重試或檢查檔案"
+    }
+  },
+  "batch": {
+    "download": "下載",
+    "downloadZip": "打包下載 {n} 個檔案 (ZIP)",
+    "packing": "打包中..."
+  },
+  "history": {
+    "description": "歷史記錄僅儲存中繼資料(檔名、格式、大小、時間),檔案內容從不持久化。",
+    "loading": "載入中...",
+    "empty": "暫無轉換記錄",
+    "clearAll": "清空全部"
+  },
+  "imageOptions": {
+    "heading": "圖片進階選項",
+    "quality": "品質",
+    "resize": "尺寸縮放",
+    "width": "寬",
+    "height": "高",
+    "stripMetadata": "移除中繼資料",
+    "original": "原始尺寸",
+    "lockAspect": "鎖定長寬比",
+    "unlockAspect": "解鎖長寬比",
+    "resetToOriginal": "恢復原始尺寸",
+    "clearResize": "清除縮放"
+  },
+  "mediaOptions": {
+    "heading": "音視訊進階選項",
+    "audioHeading": "音訊進階選項",
+    "videoSection": "視訊設定",
+    "audioSection": "音訊設定",
+    "videoCodec": "視訊編碼器",
+    "videoProfile": "編碼設定檔",
+    "videoPreset": "編碼預設",
+    "videoBitrate": "視訊位元速率",
+    "rateControl": "位元速率控制",
+    "bitrate": "位元速率",
+    "crfHint": "越小品質越好",
+    "gopSize": "關鍵影格間隔",
+    "fps": "影格率",
+    "pixFmt": "像素格式",
+    "resolution": "解析度",
+    "width": "寬",
+    "height": "高",
+    "enableAudio": "啟用音訊",
+    "audioDisabled": "音訊輸出已停用",
+    "audioCodec": "音訊編碼器",
+    "audioBitrate": "音訊位元速率",
+    "rateMode": "編碼模式",
+    "vbrQuality": "VBR 品質",
+    "sampleRate": "取樣率",
+    "bitDepth": "位元深度",
+    "channels": "聲道",
+    "channel_mono": "單聲道",
+    "channel_stereo": "立體聲",
+    "channel_joint_stereo": "聯合立體聲",
+    "channel_5.1": "5.1 環繞聲",
+    "channel_7.1": "7.1 環繞聲",
+    "auto": "自動",
+    "original": "原始",
+    "resetToOriginal": "恢復原始",
+    "clearResolution": "清除",
+    "lockAspect": "鎖定長寬比",
+    "unlockAspect": "解鎖長寬比"
+  },
+  "documentOptions": {
+    "heading": "文件進階選項",
+    "standalone": "獨立文件(包含完整結構)",
+    "toc": "產生目錄",
+    "css": "樣式表 URL",
+    "cssPlaceholder": "如 https://example.com/style.css"
+  },
+  "fileCard": {
+    "convertTo": "轉換為",
+    "selectTarget": "選擇目標格式",
+    "remove": "移除",
+    "magicMismatch": "副檔名與檔案內容不符",
+    "unknownFormat": "無法辨識的格式",
+    "noTargets": "暫無可用的目標格式",
+    "category": {
+      "image": "圖片",
+      "media": "音視訊",
+      "document": "文件",
+      "unknown": "未知"
+    }
+  },
+  "largeFile": {
+    "badge": "大檔案",
+    "title": "建議使用桌面版處理大檔案",
+    "description": "目前檔案超過 {threshold},在瀏覽器中轉換可能因記憶體不足而失敗。桌面版借助原生 CLI 工具,可穩定處理 GB 級大檔案。",
+    "continue": "仍然在瀏覽器中嘗試",
+    "downloadDesktop": "下載桌面版"
+  },
+  "common": {
+    "comingSoon": "即將推出",
+    "open": "開啟",
+    "close": "關閉",
+    "cancel": "取消",
+    "confirm": "確認"
+  },
+  "wasm": {
+    "inlineTitle": "Loading conversion engines…",
+    "engineLoading": "Engine loading"
+  },
+  "footer": {
+    "copyright": "© 2026 OmniConvert",
+    "tagline": "隱私優先 · 本機處理 · 開源免費"
+  },
+  "landing": {
+    "tagline": "本地優先的全能檔案轉換器 — 所有轉換都在你的瀏覽器內完成,檔案永不上傳。",
+    "conversionCount": "支援 {n} 種格式轉換路線",
+    "startWeb": "使用 Web 版",
+    "downloadClient": "下載用戶端",
+    "feature": {
+      "privacy": {
+        "title": "零上傳",
+        "description": "所有轉換在瀏覽器內透過 WebAssembly 完成,檔案不離開你的裝置。"
+      },
+      "engines": {
+        "title": "三大引擎",
+        "description": "ImageMagick、FFmpeg、Pandoc 涵蓋圖片、音視訊與文件全部主流格式。"
+      },
+      "platforms": {
+        "title": "全平台",
+        "description": "Web 線上版與 Windows / macOS / Linux 桌面用戶端,體驗一致。"
+      }
+    },
+    "formats": {
+      "title": "支援的格式",
+      "subtitle": "涵蓋圖片、音視訊、文件三大領域",
+      "image": "圖片",
+      "media": "音視訊",
+      "document": "文件",
+      "unit": "種",
+      "clientOnly": "僅用戶端"
+    },
+    "howItWorks": {
+      "title": "使用流程",
+      "step1": "選擇檔案",
+      "step2": "設定參數",
+      "step3": "開始轉換",
+      "step4": "下載結果"
+    }
+  }
+}

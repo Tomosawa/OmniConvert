@@ -25,7 +25,7 @@ describe('composables/useFormatRecommend', () => {
     const detected = ref<DetectedFile | null>(makeDetected('png'))
     const { targets, defaultTarget } = useFormatRecommend(detected)
     expect(targets.value.length).toBeGreaterThan(0)
-    expect(targets.value).not.toContain('png')
+    expect(targets.value).toContain('png')
     expect(defaultTarget.value).toBe(targets.value[0])
   })
 

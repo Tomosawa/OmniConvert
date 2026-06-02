@@ -1,0 +1,150 @@
+import type { Child, Command } from '@tauri-apps/plugin-shell'
+import { createLogger } from '@/utils/logger'
+
+/**
+ * Lazy-load the Tauri shell plugin so SSG / web builds never evaluate the
+ * Tauri-specific code path (which would crash without `__TAURI_INTERNALS__`).
+ */
+async function getShellPlugin(): Promise<typeof import('@tauri-apps/plugin-shell')> {
+  return import('@tauri-apps/plugin-shell')
+}
+
+const log = createLogger('sidecar')
+
+export interface SidecarProgress {
+  /** 0-100, parsed from CLI output */
+  percent: number
+  /** Raw progress line */
+  raw: string
+}
+
+export interface SidecarResult {
+  stdout: string
+  stderr: string
+  code: number
+}
+
+export interface SidecarOptions {
+  args: string[]
+  onStdout?: (line: string) => void
+  onStderr?: (line: string) => void
+  onProgress?: (progress: SidecarProgress) => void
+  signal?: AbortSignal
+}
+
+/**
+ * Parse FFmpeg's `time=HH:MM:SS.ss` progress line against a known duration.
+ * Returns -1 if no progress could be parsed (caller should ignore).
+ */
+function parseFfmpegProgress(line: string, durationSec?: number): number {
+  const timeMatch = /time=(\d+):(\d+):(\d+\.?\d*)/.exec(line)
+  if (!timeMatch || !durationSec) return -1
+  const [, h, m, s] = timeMatch
+  const elapsed = Number(h) * 3600 + Number(m) * 60 + Number(s)
+  return Math.min(100, Math.round((elapsed / durationSec) * 100))
+}
+
+/**
+ * Wrap Tauri shell plugin's `Command.sidecar()` with progress parsing and
+ * abort-signal support. Each CLI has its own progress-parsing heuristic.
+ */
+export function useSidecar() {
+  let activeChild: Child | null = null
+
+  async function run(
+    binary: string,
+    options: SidecarOptions,
+    durationSec?: number,
+  ): Promise<SidecarResult> {
+    log.info('sidecar run', { binary, args: options.args.slice(0, 5).join(' ') })
+
+    const shell = await getShellPlugin()
+    const cmd = shell.Command.sidecar(binary, options.args, {})
+    const stdoutChunks: string[] = []
+    const stderrChunks: string[] = []
+
+    return new Promise<SidecarResult>((resolve, reject) => {
+      let settled = false
+
+      const onAbort = () => {
+        if (settled) return
+        settled = true
+        log.info('sidecar aborted', { binary })
+        activeChild?.kill().catch(() => {})
+        activeChild = null
+        reject(new DOMException('Sidecar cancelled', 'AbortError'))
+      }
+
+      options.signal?.addEventListener('abort', onAbort, { once: true })
+
+      cmd
+        .spawn()
+        .then((child) => {
+          activeChild = child
+
+          // In plugin-shell v2.x, events are emitted on the Command instance,
+          // not on a separate eventStream object.
+          cmd.on('close', (event: { code?: number; signal?: number }) => {
+            if (settled) return
+            settled = true
+            activeChild = null
+            options.signal?.removeEventListener('abort', onAbort)
+            const code = event.code ?? 0
+            log.info('sidecar closed', { binary, code })
+            resolve({
+              stdout: stdoutChunks.join(''),
+              stderr: stderrChunks.join(''),
+              code,
+            })
+          })
+
+          cmd.on('error', (error: string) => {
+            if (settled) return
+            settled = true
+            activeChild = null
+            options.signal?.removeEventListener('abort', onAbort)
+            log.error('sidecar error', { binary, error })
+            reject(new Error(error))
+          })
+
+          cmd.stdout.on('data', (data: Uint8Array | string) => {
+            // plugin-shell v2.x: default encoding returns string (Text buffer),
+            // only 'raw' encoding returns Uint8Array.
+            const line = typeof data === 'string' ? data : new TextDecoder().decode(data)
+            stdoutChunks.push(line)
+            options.onStdout?.(line)
+            const pct = parseFfmpegProgress(line, durationSec)
+            if (pct >= 0) {
+              options.onProgress?.({ percent: pct, raw: line })
+            }
+          })
+
+          cmd.stderr.on('data', (data: Uint8Array | string) => {
+            const line = typeof data === 'string' ? data : new TextDecoder().decode(data)
+            stderrChunks.push(line)
+            options.onStderr?.(line)
+            // FFmpeg outputs progress to stderr
+            const pct = parseFfmpegProgress(line, durationSec)
+            if (pct >= 0) {
+              options.onProgress?.({ percent: pct, raw: line })
+            }
+          })
+        })
+        .catch((err) => {
+          if (settled) return
+          settled = true
+          activeChild = null
+          options.signal?.removeEventListener('abort', onAbort)
+          log.error('sidecar spawn failed', { binary, error: String(err) })
+          reject(new Error(`Failed to start ${binary}: ${String(err)}`))
+        })
+    })
+  }
+
+  function killActive(): void {
+    activeChild?.kill().catch(() => {})
+    activeChild = null
+  }
+
+  return { run, killActive }
+}

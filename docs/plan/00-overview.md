@@ -17,8 +17,8 @@
 | 4 ✅ | 音视频引擎 | [05-media-engine.md](./05-media-engine.md) | 3 d | FFmpeg WASM,音视频互转 |
 | 5 ✅ | 文档引擎 | [06-document-engine.md](./06-document-engine.md) | 2-3 d | Pandoc WASM,文档互转 |
 | 6 ✅ | 批量队列 + 历史 + ZIP | [07-batch-history-zip.md](./07-batch-history-zip.md) | 2-3 d | 任务队列、IndexedDB 历史、ZIP 打包(MVP) |
-| 7 | i18n 补齐 9 种语言 | [08-i18n-complete.md](./08-i18n-complete.md) | 1-2 d | 11 种语言全量翻译 |
-| 8 | Tauri 桌面端 | [09-tauri-desktop.md](./09-tauri-desktop.md) | 3-4 d | Win/macOS/Ubuntu 三平台构建 |
+| 7 ✅ | i18n 补齐 9 种语言 | [08-i18n-complete.md](./08-i18n-complete.md) | 1-2 d | 11 种语言全量翻译 |
+| 8 | Tauri 桌面端 | [09-tauri-desktop.md](./09-tauri-desktop.md) | 3-4 d | Win/macOS/Linux 三平台构建 |
 | 9 | 部署 + CI/CD | [10-deployment.md](./10-deployment.md) | 1-2 d | Vercel 上线,GitHub Releases 发布 |
 
 **MVP 上线点**: Phase 6 结束。Phase 7-9 是抛光、扩平台、上架发布。

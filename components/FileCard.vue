@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useFormatRecommend } from '@/composables/useFormatRecommend'
+import { usePlatform } from '@/composables/usePlatform'
 import { useConversionStore } from '@/stores/conversion'
 import type { FileItem } from '@/types/file'
 import type { DocumentOptions } from '@/types/documentOptions'
@@ -39,13 +40,14 @@ const props = defineProps<Props>()
 const { t } = useI18n()
 const config = useRuntimeConfig()
 const store = useConversionStore()
+const { isDesktop } = usePlatform()
 
 const detected = computed(() => props.item.detected)
 const detectedRef = computed(() => props.item.detected)
 const { targets, defaultTarget } = useFormatRecommend(detectedRef)
 
 const threshold = computed(() => Number(config.public.largeFileThreshold) || 0)
-const isLarge = computed(() => detected.value.file.size > threshold.value)
+const isLarge = computed(() => !isDesktop.value && detected.value.file.size > threshold.value)
 
 const previewUrl = ref<string | null>(null)
 
@@ -219,6 +221,7 @@ const CategoryIcon = computed(() => {
           v-if="detected.category === 'image' && targets.length > 0"
           :model-value="imageOptions"
           :quality-relevant="qualityRelevant"
+          :original-dimensions="detected.imageDimensions"
           @update:model-value="updateImageOptions"
         />
 
