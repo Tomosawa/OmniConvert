@@ -1,9 +1,8 @@
 import { ref } from 'vue'
 import { FFmpeg } from '@ffmpeg/ffmpeg'
 import { fetchFile } from '@ffmpeg/util'
-import coreRaw from '@ffmpeg/core-mt?raw'
-import coreWasmUrl from '@ffmpeg/core-mt/wasm?url'
-import workerRaw from '@ffmpeg/core-mt/worker?raw'
+import coreUrl from '@ffmpeg/core?url'
+import coreWasmUrl from '@ffmpeg/core/wasm?url'
 import type { MediaOptions } from '@/types/mediaOptions'
 import { buildFfmpegArgs, targetMime } from '@/utils/ffmpegArgs'
 import { useWasmPreload } from '@/composables/useWasmPreload'
@@ -27,7 +26,6 @@ async function ensureFfmpeg(): Promise<FFmpeg> {
     loadPromise = (async () => {
       const ff = new FFmpeg()
 
-      // 检查是否有预加载的 WASM 数据
       const { getPreloadedWasm } = useWasmPreload()
       const preloadedWasm = getPreloadedWasm('ffmpeg')
 
@@ -38,20 +36,11 @@ async function ensureFfmpeg(): Promise<FFmpeg> {
         const wasmBlob = new Blob([preloadedWasm], { type: 'application/wasm' })
         finalWasmUrl = URL.createObjectURL(wasmBlob)
         blobUrl = finalWasmUrl
-        console.log('[media] using preloaded WASM')
       }
 
-      const coreBlobUrl = URL.createObjectURL(
-        new Blob([coreRaw], { type: 'text/javascript' }),
-      )
-      const workerBlobUrl = URL.createObjectURL(
-        new Blob([workerRaw], { type: 'application/javascript' }),
-      )
-
       await ff.load({
-        coreURL: coreBlobUrl,
+        coreURL: coreUrl,
         wasmURL: finalWasmUrl,
-        workerURL: workerBlobUrl,
       })
 
       if (blobUrl) {
@@ -66,16 +55,6 @@ async function ensureFfmpeg(): Promise<FFmpeg> {
   return loadPromise
 }
 
-/**
- * FFmpeg-based media conversion. The package ships its own multi-threaded
- * worker, so we don't wrap it in another Worker — the page already runs in
- * a cross-origin-isolated context (COOP/COEP set in nuxt.config + vercel.json)
- * which is what `core-mt` requires.
- *
- * One FFmpeg instance is reused across calls for cheaper warm-up. Concurrent
- * calls are serialised by the store's `concurrency = 1` (set on mount when
- * the page detects a media file present); see Phase 6 for richer queueing.
- */
 export function useMediaConversion() {
   async function convert(args: ConvertArgs): Promise<Blob> {
     const ff = await ensureFfmpeg()
@@ -88,8 +67,10 @@ export function useMediaConversion() {
     const onProgress = args.onProgress
     const handler = ({ progress }: { progress: number }) => {
       console.log('[media] ffmpeg progress event:', progress)
-      if (typeof progress === 'number' && Number.isFinite(progress)) {
-        onProgress?.(Math.round(Math.max(0, Math.min(1, progress)) * 100))
+      if (typeof progress === 'number' && Number.isFinite(progress) && progress >= 0 && progress <= 1) {
+        const mapped = Math.round(progress * 100)
+        onProgress?.(mapped)
+        console.log('[media] onProgress called with:', mapped)
       }
     }
     ff.on('progress', handler)
@@ -122,9 +103,7 @@ export function useMediaConversion() {
         options: args.options ?? {},
       })
 
-      console.log('[media] exec args:', ffArgs)
-      await ff.exec(ffArgs, -1, { signal })
-      console.log('[media] exec done')
+      await ff.exec(ffArgs)
 
       if (aborted) throw new DOMException('Conversion cancelled', 'AbortError')
 

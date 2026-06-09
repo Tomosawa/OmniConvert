@@ -228,7 +228,7 @@ export default defineNuxtConfig({
       topLevelAwait(),
     ],
     optimizeDeps: {
-      exclude: ['pandoc-wasm', '@ffmpeg/ffmpeg', '@ffmpeg/core', '@ffmpeg/core-mt', '@ffmpeg/util'],
+      exclude: ['pandoc-wasm', '@ffmpeg/ffmpeg', '@ffmpeg/core', '@ffmpeg/util'],
     },
     build: {
       assetsInlineLimit: 0,

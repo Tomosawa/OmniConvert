@@ -48,13 +48,18 @@ const emits = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const { isDesktop } = usePlatform()
 
 function patch(partial: Partial<MediaOptions>): void {
   emits('update:modelValue', { ...props.modelValue, ...partial })
 }
 
 const isVideoTarget = computed(() => targetKind(props.targetExt) === 'video')
-const availableVideoCodecs = computed(() => getAvailableVideoCodecs(props.targetExt))
+const availableVideoCodecs = computed(() => {
+  const all = getAvailableVideoCodecs(props.targetExt)
+  if (isDesktop.value) return all
+  return all.filter((c) => c !== 'libx265')
+})
 const availableAudioCodecs = computed(() => getAvailableAudioCodecs(props.targetExt))
 
 const videoCodec = computed({
