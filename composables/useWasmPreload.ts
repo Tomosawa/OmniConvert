@@ -50,6 +50,12 @@ let preloadStarted = false
 export function useWasmPreload() {
   const { isDesktop } = usePlatform()
 
+  // Desktop sidecar engines are bundled — no WASM download needed.
+  // Set allReady=true immediately so convert.vue skips the preload screen.
+  if (import.meta.client && isDesktop.value) {
+    allReady.value = true
+  }
+
   const totalLoadedMB = computed(() => {
     const bytes = engines.value.reduce((sum, e) => sum + e.loadedBytes, 0)
     return (bytes / 1_048_576).toFixed(1)
@@ -143,6 +149,8 @@ export function useWasmPreload() {
   }
 
   function isEngineReady(category: string): boolean {
+    // Desktop uses sidecar CLI — WASM engines not needed
+    if (import.meta.client && isDesktop.value) return true
     const engineKey = CATEGORY_ENGINE[category]
     if (!engineKey) return true
     const engine = engines.value.find((e) => e.key === engineKey)
@@ -150,6 +158,8 @@ export function useWasmPreload() {
   }
 
   function enginePercent(category: string): number {
+    // Desktop uses sidecar CLI — no WASM download progress
+    if (import.meta.client && isDesktop.value) return 100
     const engineKey = CATEGORY_ENGINE[category]
     if (!engineKey) return 100
     const engine = engines.value.find((e) => e.key === engineKey)
