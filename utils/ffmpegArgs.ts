@@ -241,6 +241,11 @@ export function buildFfmpegArgs(ctx: MediaArgsContext): string[] {
   const opts = ctx.options
   const args: string[] = ['-i', ctx.inputName, '-y']
 
+  // Desktop: auto thread count for multi-core CPUs
+  if (ctx.desktop) {
+    args.push('-threads', '0')
+  }
+
   if (kind === 'audio') {
     args.push('-vn')
   } else {
@@ -256,6 +261,15 @@ export function buildFfmpegArgs(ctx: MediaArgsContext): string[] {
 
       if (opts.videoProfile && VIDEO_PROFILES[vcodec]?.includes(opts.videoProfile)) {
         args.push('-profile:v', opts.videoProfile)
+      }
+
+      // H.265 thread params: desktop gets full multi-thread, web stays single-thread
+      if (vcodec === 'libx265') {
+        if (ctx.desktop) {
+          args.push('-x265-params', 'log-level=warning')
+        } else {
+          args.push('-x265-params', 'log-level=warning:frame-threads=1:wpp=0:pools=none')
+        }
       }
 
       if ((vcodec === 'libx264' || vcodec === 'libx265') && opts.videoPreset) {
@@ -290,9 +304,6 @@ export function buildFfmpegArgs(ctx: MediaArgsContext): string[] {
 
       if (!ctx.desktop) {
         args.push('-threads', '1')
-        if (vcodec === 'libx265') {
-          args.push('-x265-params', 'log-level=warning:frame-threads=1:wpp=0:pools=none')
-        }
       }
     } else {
       args.push('-c:v', 'copy')
