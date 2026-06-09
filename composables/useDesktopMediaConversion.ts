@@ -1,4 +1,5 @@
 import type { MediaOptions } from '@/types/mediaOptions'
+import { BaseDirectory } from '@tauri-apps/plugin-fs'
 import { useSidecar } from '@/composables/useSidecar'
 import { buildFfmpegArgs, targetMime } from '@/utils/ffmpegArgs'
 import { uid } from '@/utils/fileSize'
@@ -33,7 +34,8 @@ function estimateDuration(fileSize: number): number {
 
 /**
  * Desktop media conversion via FFmpeg sidecar.
- * Writes input to a temp file, invokes `ffmpeg`, reads the output.
+ * Writes input to temp (using BaseDirectory.Temp + relative filename),
+ * invokes `ffmpeg`, reads the output.
  */
 export function useDesktopMediaConversion() {
   const sidecar = useSidecar()
@@ -44,17 +46,23 @@ export function useDesktopMediaConversion() {
     const path = await getPath()
 
     const id = uid('deskmedia')
+    const inputFileName = `${id}_input.${sourceExt}`
+    const outputFileName = `${id}_output.${targetExt}`
     const tmpBase = await path.tempDir()
-    const inputPath = await path.join(tmpBase, `${id}_input.${sourceExt}`)
-    const outputPath = await path.join(tmpBase, `${id}_output.${targetExt}`)
+    const inputPath = await path.join(tmpBase, inputFileName)
+    const outputPath = await path.join(tmpBase, outputFileName)
 
     log.info('convert start', { file: file.name, source: sourceExt, target: targetExt, size: file.size })
     args.onProgress?.(3)
 
     try {
       const inputBuf = new Uint8Array(await file.arrayBuffer())
-      await fs.writeFile(inputPath, inputBuf)
+      await fs.writeFile(inputFileName, inputBuf, { baseDir: BaseDirectory.Temp })
       args.onProgress?.(8)
+
+      // Verify file was written
+      const written = await fs.exists(inputFileName, { baseDir: BaseDirectory.Temp })
+      if (!written) throw new Error(`Temp input file not created: ${inputFileName}`)
 
       const ffArgs = buildFfmpegArgs({
         inputName: inputPath,
@@ -87,12 +95,12 @@ export function useDesktopMediaConversion() {
 
       args.onProgress?.(95)
 
-      const outputExists = await fs.exists(outputPath)
+      const outputExists = await fs.exists(outputFileName, { baseDir: BaseDirectory.Temp })
       if (!outputExists) {
         throw new Error('FFmpeg produced no output file')
       }
 
-      const outBuf = await fs.readFile(outputPath)
+      const outBuf = await fs.readFile(outputFileName, { baseDir: BaseDirectory.Temp })
       if (outBuf.byteLength === 0) {
         throw new Error('FFmpeg produced empty output')
       }
@@ -101,8 +109,8 @@ export function useDesktopMediaConversion() {
       log.info('convert done', { file: file.name, outputSize: outBuf.byteLength })
       return new Blob([outBuf], { type: targetMime(targetExt) })
     } finally {
-      try { await fs.remove(inputPath) } catch { /* ok */ }
-      try { await fs.remove(outputPath) } catch { /* ok */ }
+      try { await fs.remove(inputFileName, { baseDir: BaseDirectory.Temp }) } catch { /* ok */ }
+      try { await fs.remove(outputFileName, { baseDir: BaseDirectory.Temp }) } catch { /* ok */ }
     }
   }
 
