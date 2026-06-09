@@ -1,4 +1,5 @@
 import type { DocumentOptions } from '@/types/documentOptions'
+import { BaseDirectory } from '@tauri-apps/plugin-fs'
 import { useSidecar } from '@/composables/useSidecar'
 import {
   buildPandocOptions,
@@ -96,23 +97,31 @@ export function useDesktopDocumentConversion() {
     args.onProgress?.(5)
 
     const id = uid('deskdoc')
-    const tmpBase = await path.tempDir()
-    const inputPath = await path.join(tmpBase, `${id}_input.${srcExt}`)
+    const inputFileName = `${id}_input.${srcExt}`
     const outExt = isPdfTarget ? 'html' : tgtExt
-    const outputPath = await path.join(tmpBase, `${id}_output.${outExt}`)
+    const outputFileName = `${id}_output.${outExt}`
+    const tmpBase = await path.tempDir()
+    const inputPath = await path.join(tmpBase, inputFileName)
+    const outputPath = await path.join(tmpBase, outputFileName)
 
     const readerIsBinary = srcExt === 'docx' || srcExt === 'epub'
     const writerIsBinary = isBinaryWriter(effectiveTarget)
 
     try {
+      // Write input file to temp with explicit baseDir
       if (readerIsBinary) {
         const inputBuf = new Uint8Array(await file.arrayBuffer())
-        await fs.writeFile(inputPath, inputBuf)
+        await fs.writeFile(inputFileName, inputBuf, { baseDir: BaseDirectory.Temp })
       } else {
         const text = await file.text()
         const encoder = new TextEncoder()
-        await fs.writeFile(inputPath, encoder.encode(text))
+        await fs.writeFile(inputFileName, encoder.encode(text), { baseDir: BaseDirectory.Temp })
       }
+
+      // Verify file was written
+      const written = await fs.exists(inputFileName, { baseDir: BaseDirectory.Temp })
+      if (!written) throw new Error(`Temp input file not created: ${inputFileName}`)
+
       args.onProgress?.(15)
 
       const pandocOpts = buildPandocOptions({
@@ -151,7 +160,7 @@ export function useDesktopDocumentConversion() {
         throw new Error(err)
       }
 
-      const outputExists = await fs.exists(outputPath)
+      const outputExists = await fs.exists(outputFileName, { baseDir: BaseDirectory.Temp })
       if (!outputExists) {
         if (result.stdout) {
           const encoder = new TextEncoder()
@@ -164,7 +173,7 @@ export function useDesktopDocumentConversion() {
         throw new Error('Pandoc produced no output')
       }
 
-      const outBuf = await fs.readFile(outputPath)
+      const outBuf = await fs.readFile(outputFileName, { baseDir: BaseDirectory.Temp })
       args.onProgress?.(100)
 
       const mime = isPdfTarget ? 'text/html' : documentMime(tgtExt)
@@ -175,8 +184,8 @@ export function useDesktopDocumentConversion() {
       })
       return new Blob([outBuf], { type: mime })
     } finally {
-      try { await fs.remove(inputPath) } catch { /* ok */ }
-      try { await fs.remove(outputPath) } catch { /* ok */ }
+      try { await fs.remove(inputFileName, { baseDir: BaseDirectory.Temp }) } catch { /* ok */ }
+      try { await fs.remove(outputFileName, { baseDir: BaseDirectory.Temp }) } catch { /* ok */ }
     }
   }
 
