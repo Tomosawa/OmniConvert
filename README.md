@@ -17,7 +17,7 @@ OmniConvert 解决一件事:**安全、免费、全能地转换你的本地文�
 
 ## 当前状态
 
-**Phase 6 — 批量队列 + 历史 + ZIP(MVP 完成)🎉**
+**Phase 8 — Tauri 桌面端(开发中)**
 
 完整的 10 阶段开发计划见 [docs/plan/00-overview.md](docs/plan/00-overview.md):
 
@@ -30,8 +30,8 @@ OmniConvert 解决一件事:**安全、免费、全能地转换你的本地文�
 | 4 | FFmpeg 音视频引擎 | ✅ 已完成 |
 | 5 | Pandoc 文档引擎 | ✅ 已完成 |
 | 6 | 批量队列 + 历史 + ZIP(MVP) | ✅ 已完成 |
-| 7 | i18n 补齐 9 种语言 | 待开始 |
-| 8 | Tauri 桌面端 | 待开始 |
+| 7 | i18n 补齐 9 种语言 | ✅ 已完成 |
+| 8 | Tauri 桌面端 | 🔄 开发中 |
 | 9 | 部署、CI/CD | 待开始 |
 
 ## 技术栈
@@ -52,7 +52,8 @@ OmniConvert 解决一件事:**安全、免费、全能地转换你的本地文�
 
 ```bash
 pnpm install        # 安装依赖
-pnpm dev            # http://localhost:3000
+pnpm dev            # 启动 Web 开发服务器 http://localhost:3000
+pnpm generate       # 生成 SSG 静态产物（桌面端构建需要）
 pnpm test           # 运行 Vitest 单元测试
 pnpm typecheck      # 运行 vue-tsc 类型检查
 pnpm lint           # 运行 ESLint
@@ -60,6 +61,50 @@ pnpm build          # 构建生产产物到 .output/
 pnpm preview        # 预览 build 产物
 pnpm format         # Prettier 格式化全仓库
 ```
+
+## 桌面端开发(Tauri)
+
+前置:Rust ≥ 1.70、Tauri CLI ≥ 2.0(`pnpm add -D @tauri-apps/cli`)。
+
+### 开发模式
+
+```bash
+pnpm tauri:dev      # 启动桌面端开发模式(Tauri 自动启动 Nuxt dev server + 原生窗口)
+```
+
+> 开发模式下,Tauri 会自动执行 `pnpm dev` 启动 Nuxt 开发服务器(`http://localhost:3000`),然后在原生窗口中加载该页面。支持热更新。
+
+### 构建 Release
+
+```bash
+pnpm generate       # 先生成 SSG 静态产物
+pnpm tauri:build    # 构建桌面端安装包(.dmg / .app / .exe / .deb)
+```
+
+> 构建前 Tauri 会自动执行 `pnpm generate` 生成静态页面,然后打包为平台安装包。产物在 `src-tauri/target/release/bundle/` 下。
+
+### Sidecar 二进制
+
+桌面端使用原生 CLI 工具(ImageMagick/FFmpeg/Pandoc)作为 Sidecar,二进制文件位于 `src-tauri/binaries/` 下。首次开发或构建前,确保二进制文件存在:
+
+```bash
+pnpm tauri:prepare-binaries   # 自动检测平台并拷贝系统安装的 CLI 到 src-tauri/binaries/
+```
+
+也可手动下载二进制放入 `src-tauri/binaries/`,文件名必须匹配 Tauri 平台 triple:
+- macOS ARM64:`ffmpeg-aarch64-apple-darwin`、`magick-aarch64-apple-darwin`、`pandoc-aarch64-apple-darwin`
+- macOS Intel:`ffmpeg-x86_64-apple-darwin`、`magick-x86_64-apple-darwin`、`pandoc-x86_64-apple-darwin`
+- Windows:`ffmpeg-x86_64-pc-windows-msvc.exe` 等
+- Linux:`ffmpeg-x86_64-unknown-linux-gnu` 等
+
+### 架构说明
+
+| 环境 | 引擎 | 文件路径 |
+| :--- | :--- | :--- |
+| Web | WASM(浏览器内) | `composables/use*Conversion.ts` |
+| 桌面 | Sidecar(原生 CLI) | `composables/useDesktop*Conversion.ts` |
+
+桌面端通过 `useConversionDispatcher` 自动分流 — 检测 `window.__TAURI_INTERNALS__` 判断平台,桌面端使用 Sidecar,Web 端使用 WASM。
 
 ## 目录结构
 
@@ -133,6 +178,7 @@ docker logs omniconvert          # 查看日志
 docker ps                        # 查看运行状态
 curl http://localhost:5000/health  # 健康检查
 ```
+
 
 ## 贡献
 
