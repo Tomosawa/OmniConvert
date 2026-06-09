@@ -22,7 +22,7 @@
     "typecheck": "nuxt typecheck",
     "format": "prettier --write \"**/*.{ts,vue,js,json,md}\"",
     "tauri": "tauri",
-    "tauri:dev": "nuxt generate && tauri dev",
+    "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
     "tauri:prepare-binaries": "node scripts/prepare-sidecar-binaries.mjs"
   },
