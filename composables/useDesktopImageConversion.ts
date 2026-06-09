@@ -61,9 +61,9 @@ export function useDesktopImageConversion() {
       if (options?.quality && options.quality > 0) {
         magickArgs.push('-quality', String(options.quality))
       }
-      if (options?.width || options?.height) {
-        const w = options.width || ''
-        const h = options.height || ''
+      if (options?.resize?.width || options?.resize?.height) {
+        const w = options.resize.width || ''
+        const h = options.resize.height || ''
         magickArgs.push('-resize', `${w}x${h}`)
       }
 

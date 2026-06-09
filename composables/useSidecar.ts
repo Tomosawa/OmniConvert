@@ -64,18 +64,20 @@ function enrichSidecarError(stderr: string, binary: string, args: string[]): str
       let inputPath = ''
       if (binary.includes('ffmpeg')) {
         const idx = args.indexOf('-i')
-        if (idx !== -1 && idx + 1 < args.length) inputPath = args[idx + 1]
+        if (idx !== -1 && idx + 1 < args.length) inputPath = args[idx + 1] ?? ''
       } else if (binary.includes('magick')) {
         // magick args: [...options] inputPath outputPath
         // Find the last two positional args — first is input, second is output
         const positional = args.filter(a => !a.startsWith('-'))
-        if (positional.length >= 2) inputPath = positional[0]
+        if (positional.length >= 2) inputPath = positional[0] ?? ''
       } else if (binary.includes('pandoc')) {
         // pandoc args: [--flags] inputPath -o outputPath
         // First positional arg that doesn't follow a flag is the input
         for (let i = 0; i < args.length; i++) {
-          if (!args[i].startsWith('-') && i > 0 && !args[i - 1].startsWith('-')) {
-            inputPath = args[i]
+          const cur = args[i]
+          const prev = args[i - 1]
+          if (cur && !cur.startsWith('-') && prev && !prev.startsWith('-')) {
+            inputPath = cur
             break
           }
         }
@@ -127,7 +129,7 @@ export function useSidecar() {
 
           // In plugin-shell v2.x, events are emitted on the Command instance,
           // not on a separate eventStream object.
-          cmd.on('close', (event: { code?: number; signal?: number }) => {
+          cmd.on('close', (event: { code?: number | null; signal?: number | null }) => {
             if (settled) return
             settled = true
             activeChild = null
