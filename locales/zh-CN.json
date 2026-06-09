@@ -102,6 +102,10 @@
       "cancelled": "已取消"
     },
     "cancel": "取消转换",
+    "save": "保存到本地",
+    "saveAll": "全部保存到本地",
+    "saved": "已保存",
+    "openFolder": "打开文件夹",
     "error": {
       "generic": "转换失败,请重试或检查文件"
     }
@@ -167,7 +171,8 @@
     "resetToOriginal": "恢复原始",
     "clearResolution": "清除",
     "lockAspect": "锁定长宽比",
-    "unlockAspect": "解锁长宽比"
+    "unlockAspect": "解锁长宽比",
+    "h265CompatNote": "H.265 (HEVC) 文件在部分播放器中可能无法直接播放，建议使用 VLC 或支持 HEVC 的播放器。"
   },
   "documentOptions": {
     "heading": "文档高级选项",

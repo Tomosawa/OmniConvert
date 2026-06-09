@@ -329,6 +329,14 @@ watch(
             </Select>
           </div>
 
+          <!-- H.265 compatibility note (desktop only) -->
+          <div
+            v-if="isDesktop && (videoCodec === 'libx265' || (!videoCodec && getDefaultVideoCodec(targetExt) === 'libx265'))"
+            class="col-span-2 rounded-md border border-amber-400/40 bg-amber-50/60 px-3 py-2 text-xs text-amber-800 dark:bg-amber-900/20 dark:text-amber-300"
+          >
+            ⚠️ {{ t('mediaOptions.h265CompatNote') }}
+          </div>
+
           <!-- Video Profile -->
           <div v-if="videoProfiles.length > 0" class="grid grid-cols-[120px_1fr] items-center gap-2">
             <label class="text-xs text-muted-foreground">{{ t('mediaOptions.videoProfile') }}</label>

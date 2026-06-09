@@ -18,7 +18,6 @@ import { usePlatform } from '@/composables/usePlatform'
 import { useWasmPreload } from '@/composables/useWasmPreload'
 
 const { t } = useI18n()
-const router = useRouter()
 const { isDesktop } = usePlatform()
 const { preload } = useWasmPreload()
 
@@ -26,12 +25,11 @@ useHead({
   titleTemplate: () => 'OmniConvert',
 })
 
-// On desktop, skip landing page and go directly to convert
+// Desktop redirect is handled by middleware/desktop-redirect.global.ts
+// (no onMounted flash — the middleware runs before the page renders)
 // On web, start preloading WASM engines in the background while user browses
 onMounted(() => {
-  if (isDesktop.value) {
-    router.replace('/convert')
-  } else {
+  if (!isDesktop.value) {
     preload()
   }
 })

@@ -12,6 +12,7 @@ const READER_BY_EXT: Readonly<Record<string, string>> = {
   html: 'html',
   htm: 'html',
   docx: 'docx',
+  doc: 'docx',  // Legacy .doc → try Pandoc docx reader (many .doc files are renamed .docx)
   epub: 'epub',
   tex: 'latex',
   latex: 'latex',

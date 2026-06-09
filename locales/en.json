@@ -102,6 +102,11 @@
       "cancelled": "Cancelled"
     },
     "cancel": "Cancel conversion",
+    "save": "Save to folder",
+    "saveAll": "Save all to folder",
+    "savedTo": "Saved to {path}",
+    "saveError": "Failed to save file",
+    "openFolder": "Open folder",
     "error": {
       "generic": "Conversion failed — please retry or check the file"
     }
@@ -167,7 +172,8 @@
     "resetToOriginal": "Reset to original",
     "clearResolution": "Clear",
     "lockAspect": "Lock aspect ratio",
-    "unlockAspect": "Unlock aspect ratio"
+    "unlockAspect": "Unlock aspect ratio",
+    "h265CompatNote": "H.265 (HEVC) files may not play in all browsers or media players. For maximum compatibility, use H.264 (libx264) instead."
   },
   "documentOptions": {
     "heading": "Document options",

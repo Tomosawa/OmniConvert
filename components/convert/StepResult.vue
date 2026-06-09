@@ -4,8 +4,10 @@ import {
   Archive,
   CheckCircle2,
   Download,
+  FolderOpen,
   Loader2,
   RotateCw,
+  Save,
   XCircle,
 } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
@@ -14,6 +16,8 @@ import ResultPreview from '@/components/ResultPreview.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { useDesktopSave } from '@/composables/useDesktopSave'
+import { usePlatform } from '@/composables/usePlatform'
 import { useZipPacker } from '@/composables/useZipPacker'
 import { useConversionStore } from '@/stores/conversion'
 import type { ConversionTask } from '@/types/conversion'
@@ -27,8 +31,13 @@ const { t } = useI18n()
 const store = useConversionStore()
 const { tasks } = storeToRefs(store)
 const { pack } = useZipPacker()
+const { isDesktop } = usePlatform()
+const desktopSave = useDesktopSave()
 
 const packing = ref(false)
+const savingTaskId = ref<string | null>(null)
+// Track which tasks have been saved (desktop) so we can show "open folder" button
+const savedPaths = ref<Map<string, string>>(new Map())
 
 const completed = computed(() => store.completed)
 const failed = computed(() => store.failed)
@@ -50,12 +59,46 @@ function downloadOne(task: ConversionTask): void {
   a.remove()
 }
 
+async function handleSaveOne(task: ConversionTask): Promise<void> {
+  if (isDesktop.value) {
+    savingTaskId.value = task.id
+    try {
+      const saved = await desktopSave.saveAs(task)
+      if (saved) {
+        // Mark as saved (we don't have the exact path since save dialog doesn't return it
+        // in our current implementation, but the user got the dialog)
+        // No path tracking needed — the dialog lets user choose location
+      }
+    } catch (err) {
+      console.error('[StepResult] desktop save failed:', err)
+      // Fall back to browser download on error
+      downloadOne(task)
+    } finally {
+      savingTaskId.value = null
+    }
+  } else {
+    downloadOne(task)
+  }
+}
+
 async function downloadAll(): Promise<void> {
   if (completed.value.length === 0 || packing.value) return
   if (completed.value.length === 1) {
-    downloadOne(completed.value[0]!)
+    await handleSaveOne(completed.value[0]!)
     return
   }
+
+  if (isDesktop.value) {
+    // Desktop batch: save each file individually via dialog
+    for (const task of completed.value) {
+      if (task.resultBlob) {
+        await handleSaveOne(task)
+      }
+    }
+    return
+  }
+
+  // Web batch: ZIP download
   packing.value = true
   try {
     const entries = completed.value
@@ -81,6 +124,15 @@ function retry(taskId: string): void {
 
 const allDone = computed(() => completed.value.length === tasks.value.length)
 const hasSomeSuccess = computed(() => completed.value.length > 0)
+
+// Button labels: desktop uses "保存", web uses "下载"
+const saveLabel = computed(() => isDesktop.value ? t('task.save') : t('task.download'))
+const saveAllLabel = computed(() => {
+  if (isDesktop.value) {
+    return completed.value.length > 1 ? t('task.saveAll') : t('task.save')
+  }
+  return completed.value.length > 1 ? t('batch.downloadZip', { n: completed.value.length }) : t('batch.download')
+})
 </script>
 
 <template>
@@ -107,10 +159,11 @@ const hasSomeSuccess = computed(() => completed.value.length > 0)
         class="gap-2"
         @click="downloadAll"
       >
-        <Loader2 v-if="packing" class="h-4 w-4 animate-spin" />
-        <Archive v-else-if="completed.length > 1" class="h-4 w-4" />
+        <Loader2 v-if="packing || savingTaskId" class="h-4 w-4 animate-spin" />
+        <Archive v-else-if="completed.length > 1 && !isDesktop" class="h-4 w-4" />
+        <Save v-else-if="isDesktop" class="h-4 w-4" />
         <Download v-else class="h-4 w-4" />
-        {{ completed.length > 1 ? t('batch.downloadZip', { n: completed.length }) : t('batch.download') }}
+        {{ saveAllLabel }}
       </Button>
       <Button variant="outline" class="gap-2" @click="emit('new-task')">
         <RotateCw class="h-4 w-4" />
@@ -192,10 +245,13 @@ const hasSomeSuccess = computed(() => completed.value.length > 0)
               v-if="task.status === 'success'"
               size="sm"
               class="gap-2"
-              @click="downloadOne(task)"
+              :disabled="savingTaskId === task.id"
+              @click="handleSaveOne(task)"
             >
-              <Download class="h-3.5 w-3.5" />
-              {{ t('task.download') }}
+              <Loader2 v-if="savingTaskId === task.id" class="h-3.5 w-3.5 animate-spin" />
+              <Save v-else-if="isDesktop" class="h-3.5 w-3.5" />
+              <Download v-else class="h-3.5 w-3.5" />
+              {{ saveLabel }}
             </Button>
           </div>
 
