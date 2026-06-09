@@ -82,6 +82,10 @@ export const FORMAT_RECOMMENDATIONS: Readonly<Record<string, readonly string[]>>
   m4v: ['mp4', 'webm', 'mov', 'mkv', 'm4v'],
 
   // document targets — PDF deferred to desktop app (LaTeX/Pandoc CLI not available in WASM).
+  // .doc (legacy OLE2 Word) is not supported by Pandoc reader, but many .doc files
+  // are actually renamed .docx files. Offer targets anyway — if the file is truly
+  // OLE2, Pandoc will fail with a clear error message.
+  doc: ['docx', 'html', 'md', 'txt'],
   md: ['docx', 'html', 'epub', 'tex'],
   markdown: ['docx', 'html', 'epub', 'tex'],
   docx: ['md', 'html', 'epub', 'tex'],
@@ -101,6 +105,7 @@ export const FORMAT_RECOMMENDATIONS: Readonly<Record<string, readonly string[]>>
  */
 export const FORMAT_RECOMMENDATIONS_DESKTOP: Readonly<Record<string, readonly string[]>> = {
   ...FORMAT_RECOMMENDATIONS,
+  doc: ['docx', 'html', 'md', 'pdf', 'txt'],
   md: ['docx', 'html', 'pdf', 'epub', 'tex'],
   markdown: ['docx', 'html', 'pdf', 'epub', 'tex'],
   docx: ['md', 'html', 'pdf', 'epub', 'tex'],
