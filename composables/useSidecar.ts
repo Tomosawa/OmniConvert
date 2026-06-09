@@ -1,4 +1,4 @@
-import type { Child, Command } from '@tauri-apps/plugin-shell'
+import type { Child } from '@tauri-apps/plugin-shell'
 import { createLogger } from '@/utils/logger'
 
 /**
@@ -42,6 +42,49 @@ function parseFfmpegProgress(line: string, durationSec?: number): number {
   const [, h, m, s] = timeMatch
   const elapsed = Number(h) * 3600 + Number(m) * 60 + Number(s)
   return Math.min(100, Math.round((elapsed / durationSec) * 100))
+}
+
+/**
+ * Detect common filesystem error patterns in sidecar stderr and augment
+ * the error message with helpful context. Returns the enriched error string,
+ * or the original stderr if no patterns match.
+ */
+function enrichSidecarError(stderr: string, binary: string, args: string[]): string {
+  const patterns: Array<{ re: RegExp; hint: string }> = [
+    { re: /No such file or directory/i, hint: 'File path not found — check that the temp file was written correctly' },
+    { re: /cannot open/i, hint: 'Cannot open file — may be a permission or path issue' },
+    { re: /Permission denied/i, hint: 'Permission denied — the sidecar cannot access the specified path' },
+    { re: /No route to host/i, hint: 'Network error — sidecar tried to reach a remote resource' },
+  ]
+
+  for (const { re, hint } of patterns) {
+    if (re.test(stderr)) {
+      // Extract the input path from args (first arg after '-i' for ffmpeg,
+      // first positional arg for magick, first positional arg for pandoc)
+      let inputPath = ''
+      if (binary.includes('ffmpeg')) {
+        const idx = args.indexOf('-i')
+        if (idx !== -1 && idx + 1 < args.length) inputPath = args[idx + 1]
+      } else if (binary.includes('magick')) {
+        // magick args: [...options] inputPath outputPath
+        // Find the last two positional args — first is input, second is output
+        const positional = args.filter(a => !a.startsWith('-'))
+        if (positional.length >= 2) inputPath = positional[0]
+      } else if (binary.includes('pandoc')) {
+        // pandoc args: [--flags] inputPath -o outputPath
+        // First positional arg that doesn't follow a flag is the input
+        for (let i = 0; i < args.length; i++) {
+          if (!args[i].startsWith('-') && i > 0 && !args[i - 1].startsWith('-')) {
+            inputPath = args[i]
+            break
+          }
+        }
+      }
+      return `${stderr}\n[Diagnostic] ${hint}. Input path: ${inputPath || '(not detected from args)'}`
+    }
+  }
+
+  return stderr
 }
 
 /**
@@ -91,6 +134,16 @@ export function useSidecar() {
             options.signal?.removeEventListener('abort', onAbort)
             const code = event.code ?? 0
             log.info('sidecar closed', { binary, code })
+
+            // Enrich error message for non-zero exit codes
+            const stderr = stderrChunks.join('')
+            if (code !== 0 && stderr) {
+              const enriched = enrichSidecarError(stderr, binary, options.args)
+              if (enriched !== stderr) {
+                log.warn('sidecar diagnostic', { binary, enriched: enriched.slice(0, 300) })
+              }
+            }
+
             resolve({
               stdout: stdoutChunks.join(''),
               stderr: stderrChunks.join(''),
@@ -108,8 +161,6 @@ export function useSidecar() {
           })
 
           cmd.stdout.on('data', (data: Uint8Array | string) => {
-            // plugin-shell v2.x: default encoding returns string (Text buffer),
-            // only 'raw' encoding returns Uint8Array.
             const line = typeof data === 'string' ? data : new TextDecoder().decode(data)
             stdoutChunks.push(line)
             options.onStdout?.(line)
