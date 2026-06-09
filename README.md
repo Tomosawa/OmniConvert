@@ -80,6 +80,9 @@ OmniConvert/
 ├── types/                 # PascalCase 类型
 ├── workers/               # WASM Web Worker
 ├── utils/                 # 纯函数
+├── docker/                # Docker 部署文件
+│   ├── Dockerfile         # 多阶段构建（x86/nginx）
+│   └── nginx.conf         # Nginx 配置（含 COOP/COEP）
 ├── locales/               # i18n 资源
 ├── tests/                 # Vitest 单测
 └── docs/
@@ -89,9 +92,51 @@ OmniConvert/
 
 详见 [CLAUDE.md](CLAUDE.md)(开发约束与命名规范)。
 
+## Docker 部署
+
+### 构建镜像（x86 架构）
+
+在项目根目录执行：
+
+```bash
+docker build -f docker/Dockerfile --platform linux/amd64 -t omniconvert:latest .
+```
+
+### 导出镜像为 tar 文件
+
+```bash
+docker save omniconvert:latest -o docker/omniconvert.tar
+```
+
+### 上传到 Ubuntu 服务器
+
+```bash
+scp omniconvert.tar user@your-server:/path/to/deploy/
+```
+
+### 在服务器上加载并运行
+
+```bash
+docker load -i omniconvert.tar
+docker run -d -p 5000:5000 --name omniconvert --restart unless-stopped omniconvert:latest
+```
+
+访问 `http://your-server:5000` 即可使用。
+
+### 常用运维命令
+
+```bash
+docker stop omniconvert          # 停止
+docker start omniconvert         # 启动
+docker rm omniconvert            # 删除容器
+docker logs omniconvert          # 查看日志
+docker ps                        # 查看运行状态
+curl http://localhost:5000/health  # 健康检查
+```
+
 ## 贡献
 
-本项目处于早期阶段,详情见 [docs/plan/00-overview.md](docs/plan/00-overview.md)。
+
 
 ## License
 

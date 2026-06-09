@@ -127,7 +127,6 @@ async function probeMediaMetadata(file: File): Promise<MediaMetadata | undefined
     const { FFmpeg } = await import('@ffmpeg/ffmpeg')
     const { fetchFile } = await import('@ffmpeg/util')
 
-    // 使用预加载的 FFmpeg WASM 数据，避免重复下载
     const { useWasmPreload } = await import('@/composables/useWasmPreload')
     const { getPreloadedWasm } = useWasmPreload()
     const preloadedWasm = getPreloadedWasm('ffmpeg')
@@ -135,32 +134,21 @@ async function probeMediaMetadata(file: File): Promise<MediaMetadata | undefined
     let finalWasmUrl: string
     let blobUrl: string | null = null
 
+    const coreUrl = (await import('@ffmpeg/core?url')).default
+
     if (preloadedWasm) {
-      // 使用预加载的 WASM 二进制数据
       const wasmBlob = new Blob([preloadedWasm], { type: 'application/wasm' })
       finalWasmUrl = URL.createObjectURL(wasmBlob)
       blobUrl = finalWasmUrl
       log.info('using preloaded WASM for probe')
     } else {
-      // 降级到动态导入
-      finalWasmUrl = (await import('@ffmpeg/core-mt/wasm?url')).default
+      finalWasmUrl = (await import('@ffmpeg/core/wasm?url')).default
     }
-
-    const coreRaw = (await import('@ffmpeg/core-mt?raw')).default
-    const coreBlobUrl = URL.createObjectURL(
-      new Blob([coreRaw], { type: 'text/javascript' }),
-    )
-
-    const workerRaw = (await import('@ffmpeg/core-mt/worker?raw')).default
-    const workerBlobUrl = URL.createObjectURL(
-      new Blob([workerRaw], { type: 'application/javascript' }),
-    )
 
     const ff = new FFmpeg()
     await ff.load({
-      coreURL: coreBlobUrl,
+      coreURL: coreUrl,
       wasmURL: finalWasmUrl,
-      workerURL: workerBlobUrl,
     })
 
     const ext = file.name.split('.').pop() || 'bin'

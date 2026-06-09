@@ -291,7 +291,7 @@ export function buildFfmpegArgs(ctx: MediaArgsContext): string[] {
       if (!ctx.desktop) {
         args.push('-threads', '1')
         if (vcodec === 'libx265') {
-          args.push('-x265-params', 'log-level=warning:frame-threads=1')
+          args.push('-x265-params', 'log-level=warning:frame-threads=1:wpp=0:pools=none')
         }
       }
     } else {

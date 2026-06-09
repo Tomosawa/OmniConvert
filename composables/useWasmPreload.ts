@@ -4,7 +4,7 @@ import { usePlatform } from './usePlatform'
 import { fetchWithProgress } from '@/utils/fetchWithProgress'
 
 // WASM URLs — Vite resolves these to hashed asset URLs at build time.
-import ffmpegWasmUrl from '@ffmpeg/core-mt/wasm?url'
+import ffmpegWasmUrl from '@ffmpeg/core/wasm?url'
 import magickWasmUrl from '@imagemagick/magick-wasm/magick.wasm?url'
 import pandocWasmUrl from 'virtual:pandoc-wasm-url'
 
@@ -22,7 +22,7 @@ export interface EngineStatus {
 
 const WASM_URLS: Record<string, string> = {}
 const INITIAL_SIZES: Record<string, number> = {
-  ffmpeg: 32_341_219,
+  ffmpeg: 32_232_419,
   magick: 14_420_293,
   pandoc: 58_379_729,
 }

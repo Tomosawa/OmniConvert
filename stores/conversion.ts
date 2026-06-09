@@ -180,7 +180,9 @@ export const useConversionStore = defineStore('conversion', () => {
     log.info('task start', { id: task.id, file: task.fileItem.detected.file.name, target: task.targetFormat })
     try {
       const { blob } = await fn(task, (n) => {
+        console.log('[store] progress callback n:', n, 'task.progress before:', task.progress)
         task.progress = Math.max(task.progress, Math.min(100, Math.round(n)))
+        console.log('[store] task.progress after:', task.progress)
       }, controller.signal)
       task.resultBlob = blob
       task.resultUrl = URL.createObjectURL(blob)
