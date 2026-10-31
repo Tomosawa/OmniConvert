@@ -209,6 +209,13 @@
     "cancel": "取消",
     "confirm": "确认"
   },
+  "preview": {
+    "h265NoSupport": "浏览器不支持 H.265 (HEVC) 预览",
+    "h265Hint": "H.265 需要专用解码器，浏览器暂不支持直接播放",
+    "openWithPlayer": "用系统播放器打开",
+    "opening": "正在打开…",
+    "downloadToPlay": "下载后播放"
+  },
   "wasm": {
     "inlineTitle": "正在加载转换引擎…",
     "engineLoading": "引擎加载中"

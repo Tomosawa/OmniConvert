@@ -50,3 +50,8 @@ src-tauri/binaries/
 
 # Misc
 *.local
+
+# Local-only content
+ppt
+docker/*.tar
+docker/*.tar.gz

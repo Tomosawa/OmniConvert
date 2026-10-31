@@ -214,6 +214,13 @@
     "inlineTitle": "Loading conversion engines…",
     "engineLoading": "Engine loading"
   },
+  "preview": {
+    "h265NoSupport": "H.265 (HEVC) cannot be previewed in the browser",
+    "h265Hint": "Download the file and open it with a player that supports HEVC (e.g. VLC, IINA)",
+    "openWithPlayer": "Open with system player",
+    "opening": "Opening…",
+    "downloadToPlay": "Download to play"
+  },
   "footer": {
     "copyright": "© 2026 OmniConvert",
     "tagline": "Privacy first · Runs locally · Open source"

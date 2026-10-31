@@ -210,14 +210,14 @@ describe('utils/ffmpegArgs#buildFfmpegArgs — video targets', () => {
 
 describe('utils/ffmpegArgs — format-specific helpers', () => {
   it('getAudioBitrates returns correct lists per format', () => {
-    expect(getAudioBitrates('mp3')).toEqual(['64k', '96k', '128k', '160k', '192k', '256k', '320k'])
+    expect(getAudioBitrates('mp3')).toEqual(['32k', '48k', '64k', '80k', '96k', '112k', '128k', '160k', '192k', '224k', '256k', '320k'])
     expect(getAudioBitrates('wav')).toEqual([])
     expect(getAudioBitrates('flac')).toEqual([])
     expect(getAudioBitrates('ogg').length).toBeGreaterThan(5)
   })
 
   it('getSampleRates returns correct lists per format', () => {
-    expect(getSampleRates('mp3')).toEqual([22050, 32000, 44100, 48000])
+    expect(getSampleRates('mp3')).toEqual([8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000])
     expect(getSampleRates('flac')).toContain(192000)
     expect(getSampleRates('flac')).toContain(384000)
     expect(getSampleRates('wav')).toContain(176400)
@@ -227,7 +227,9 @@ describe('utils/ffmpegArgs — format-specific helpers', () => {
     expect(getBitDepths('wav')).toEqual([16, 24, 32])
     expect(getBitDepths('flac')).toEqual([16, 24, 32])
     expect(getBitDepths('mp3')).toEqual([])
-    expect(getBitDepths('ogg')).toEqual([16])
+    expect(getBitDepths('ogg')).toEqual([])
+    expect(getBitDepths('aac')).toEqual([])
+    expect(getBitDepths('m4a')).toEqual([])
   })
 
   it('formatSupportsBitrate works correctly', () => {
@@ -241,6 +243,8 @@ describe('utils/ffmpegArgs — format-specific helpers', () => {
     expect(formatSupportsBitDepth('wav')).toBe(true)
     expect(formatSupportsBitDepth('flac')).toBe(true)
     expect(formatSupportsBitDepth('mp3')).toBe(false)
-    expect(formatSupportsBitDepth('ogg')).toBe(true)
+    expect(formatSupportsBitDepth('ogg')).toBe(false)
+    expect(formatSupportsBitDepth('aac')).toBe(false)
+    expect(formatSupportsBitDepth('m4a')).toBe(false)
   })
 })
