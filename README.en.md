@@ -22,13 +22,22 @@ Full requirements: [docs/prd/OmniConv-prd.md](docs/prd/OmniConv-prd.md).
 Desktop installers are published on [GitHub Releases](https://github.com/tomosawa/OmniConvert/releases):
 
 - macOS (Apple Silicon): `OmniConvert_0.1.0_aarch64.dmg`
-- Windows / Linux builds must be produced on their respective platforms — see "Desktop Development" below
+- Windows (x64): `OmniConvert_0.1.0_x64-setup.exe` (NSIS installer), `OmniConvert_0.1.0_x64_en-US.msi` (MSI installer)
+- Linux builds must be produced on their respective platforms — see "Desktop Development" below
 
-The web version can be deployed as static output or run as a Docker image.
+The web version ships as a static bundle, `OmniConvert_0.1.0_web.zip`, or can be run as a Docker image.
+
+### Web release (dist packaging)
+
+```bash
+pnpm generate        # Generate static (SSG) output into .output/public
+# Package the release zip (PowerShell)
+Compress-Archive -Path .output/public/* -DestinationPath OmniConvert_0.1.0_web.zip
+```
 
 ## Status
 
-**v0.1.0 — Web MVP + macOS desktop released**
+**v0.1.0 — Web MVP + macOS & Windows desktop released**
 
 The complete 10-phase plan is in [docs/plan/00-overview.md](docs/plan/00-overview.md):
 

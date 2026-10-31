@@ -22,13 +22,22 @@ OmniConvert 解决一件事：**安全、免费、全能地转换你的本地文
 桌面安装包发布在 [GitHub Releases](https://github.com/tomosawa/OmniConvert/releases)：
 
 - macOS（Apple Silicon）：`OmniConvert_0.1.0_aarch64.dmg`
-- Windows / Linux 版本需在对应平台自行构建，详见下方「桌面端开发」
+- Windows（x64）：`OmniConvert_0.1.0_x64-setup.exe`（NSIS 安装包）、`OmniConvert_0.1.0_x64_en-US.msi`（MSI 安装包）
+- Linux 版本需在对应平台自行构建，详见下方「桌面端开发」
 
-Web 版可直接部署静态产物，或使用 Docker 镜像运行。
+Web 版以静态产物包 `OmniConvert_0.1.0_web.zip` 发布，也可以使用 Docker 镜像运行。
+
+### Web 端发布（dist 打包）
+
+```bash
+pnpm generate        # 生成 SSG 静态产物到 .output/public
+# 打包为发布用 zip（PowerShell）
+Compress-Archive -Path .output/public/* -DestinationPath OmniConvert_0.1.0_web.zip
+```
 
 ## 当前状态
 
-**v0.1.0 — Web MVP + macOS 桌面端已发布**
+**v0.1.0 — Web MVP + macOS / Windows 桌面端已发布**
 
 完整的 10 阶段开发计划见 [docs/plan/00-overview.md](docs/plan/00-overview.md)：
 
