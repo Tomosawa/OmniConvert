@@ -93,11 +93,11 @@ export const PIX_FMTS: readonly string[] = [
 ]
 
 export const AUDIO_BITRATES_BY_FORMAT: Readonly<Record<string, readonly string[]>> = {
-  mp3: ['64k', '96k', '128k', '160k', '192k', '256k', '320k'],
-  aac: ['64k', '96k', '128k', '160k', '192k', '256k', '320k'],
-  m4a: ['64k', '96k', '128k', '160k', '192k', '256k', '320k'],
-  ogg: ['64k', '96k', '128k', '160k', '192k', '256k', '320k', '500k'],
-  ac3: ['128k', '192k', '256k', '320k', '384k', '448k', '640k'],
+  mp3: ['32k', '48k', '64k', '80k', '96k', '112k', '128k', '160k', '192k', '224k', '256k', '320k'],
+  aac: ['32k', '48k', '64k', '80k', '96k', '112k', '128k', '160k', '192k', '224k', '256k', '320k', '384k', '448k', '512k'],
+  m4a: ['32k', '48k', '64k', '80k', '96k', '112k', '128k', '160k', '192k', '224k', '256k', '320k', '384k', '448k', '512k'],
+  ogg: ['32k', '48k', '64k', '80k', '96k', '112k', '128k', '160k', '192k', '224k', '256k', '320k', '384k', '448k', '500k'],
+  ac3: ['32k', '48k', '64k', '96k', '128k', '160k', '192k', '256k', '320k', '384k', '448k', '576k', '640k'],
   wav: [],
   flac: [],
 }
@@ -123,32 +123,28 @@ export const AUDIO_RATE_MODES_BY_CODEC: Readonly<Record<string, readonly AudioRa
 export const AUDIO_CHANNEL_OPTIONS: Readonly<Record<string, readonly AudioChannelLayout[]>> = {
   libmp3lame: ['mono', 'stereo', 'joint_stereo'],
   aac: ['mono', 'stereo'],
-  libopus: ['mono', 'stereo'],
+  libopus: ['mono', 'stereo', '5.1'],
   libvorbis: ['mono', 'stereo'],
   ac3: ['mono', 'stereo', '5.1'],
-  flac: ['mono', 'stereo'],
+  flac: ['mono', 'stereo', '5.1'],
   pcm_s16le: ['mono', 'stereo'],
   pcm_s24le: ['mono', 'stereo'],
   pcm_f32le: ['mono', 'stereo'],
 }
 
 export const SAMPLE_RATES_BY_FORMAT: Readonly<Record<string, readonly number[]>> = {
-  mp3: [22050, 32000, 44100, 48000],
-  aac: [22050, 32000, 44100, 48000, 88200, 96000],
-  m4a: [22050, 32000, 44100, 48000, 88200, 96000],
-  ogg: [22050, 32000, 44100, 48000, 88200, 96000, 192000],
-  ac3: [32000, 44100, 48000],
-  wav: [22050, 32000, 44100, 48000, 88200, 96000, 176400, 192000],
-  flac: [22050, 32000, 44100, 48000, 88200, 96000, 176400, 192000, 352800, 384000],
+  mp3: [8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000],
+  aac: [8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 88200, 96000],
+  m4a: [8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 88200, 96000],
+  ogg: [8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 88200, 96000, 192000],
+  ac3: [8000, 11025, 16000, 22050, 24000, 32000, 44100, 48000],
+  wav: [8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 88200, 96000, 176400, 192000],
+  flac: [8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 88200, 96000, 176400, 192000, 352800, 384000],
 }
 
 export const BIT_DEPTHS_BY_FORMAT: Readonly<Record<string, readonly (16 | 24 | 32)[]>> = {
   wav: [16, 24, 32],
   flac: [16, 24, 32],
-  aac: [16, 24],
-  m4a: [16, 24],
-  ogg: [16],
-  mp3: [],
 }
 
 export function targetKind(ext: string): MediaTargetKind {

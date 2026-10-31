@@ -21,12 +21,16 @@ const { t } = useI18n()
 const { isDesktop } = usePlatform()
 const { preload } = useWasmPreload()
 
+// On desktop, redirect immediately in setup (before any template renders).
+// This is synchronous — no flash possible.
+if (import.meta.client && isDesktop.value) {
+  await navigateTo('/convert', { replace: true })
+}
+
 useHead({
   titleTemplate: () => 'OmniConvert',
 })
 
-// Desktop redirect is handled by middleware/desktop-redirect.global.ts
-// (no onMounted flash — the middleware runs before the page renders)
 // On web, start preloading WASM engines in the background while user browses
 onMounted(() => {
   if (!isDesktop.value) {
@@ -66,7 +70,7 @@ const conversionCount = computed(() => {
 </script>
 
 <template>
-  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-24">
+  <section v-if="!isDesktop" class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-24">
     <div class="mx-auto max-w-3xl text-center">
       <h1 class="text-5xl font-bold tracking-tight sm:text-6xl">
         OmniConvert

@@ -12,11 +12,16 @@ import ConvertStepConfigure from '@/components/convert/StepConfigure.vue'
 import ConvertStepProgress from '@/components/convert/StepProgress.vue'
 import ConvertStepResult from '@/components/convert/StepResult.vue'
 import { useWasmPreload } from '@/composables/useWasmPreload'
+import { usePlatform } from '@/composables/usePlatform'
 
 const { allReady: enginesReady, preload } = useWasmPreload()
+const { isDesktop } = usePlatform()
 
 // Ensure preload starts even if user navigates directly to /convert
-preload()
+// On desktop, native CLI handles conversions — no WASM needed
+if (!isDesktop.value) {
+  preload()
+}
 
 type Step = 'upload' | 'configure' | 'progress' | 'result'
 
@@ -147,11 +152,11 @@ watch(
       </div>
     </div>
 
-    <!-- Show full-screen preload bar while engines are loading -->
-    <WasmPreloadBar v-if="!enginesReady" />
+    <!-- Show full-screen preload bar while engines are loading (web only) -->
+    <WasmPreloadBar v-if="!isDesktop && !enginesReady" />
 
-    <!-- Only show conversion steps after all engines are ready -->
-    <template v-else>
+    <!-- Show conversion steps: always on desktop, or on web once engines are ready -->
+    <template v-if="isDesktop || enginesReady">
       <ConvertStepUpload
         v-if="currentStep === 'upload'"
         @files="handleFiles"

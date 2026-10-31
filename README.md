@@ -1,25 +1,36 @@
 # OmniConvert
 
-> 本地优先的全能文件转换器 — 图片、音视频、文档全部在你的浏览器内通过 WebAssembly 完成转换,**文件永不上传**。
+> 本地优先的全能文件转换器 — 图片、音视频、文档全部在你的设备本地完成转换，**文件永不上传**。
 
-[![Status](https://img.shields.io/badge/status-Phase%206%20MVP-brightgreen)]() [![Vue](https://img.shields.io/badge/Vue-3-42b883)]() [![Nuxt](https://img.shields.io/badge/Nuxt-3.16-00DC82)]() [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)]() [![License](https://img.shields.io/badge/license-MIT-green)]()
+**中文** | [English](README.en.md)
+
+[![Status](https://img.shields.io/badge/status-v0.1.0-brightgreen)](https://github.com/tomosawa/OmniConvert/releases) [![Vue](https://img.shields.io/badge/Vue-3-42b883)]() [![Nuxt](https://img.shields.io/badge/Nuxt-3.16-00DC82)]() [![Tauri](https://img.shields.io/badge/Tauri-2-24C8DB)]() [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)]() [![License](https://img.shields.io/badge/license-MIT-green)]()
 
 ## 项目简介
 
-OmniConvert 解决一件事:**安全、免费、全能地转换你的本地文件**。
+OmniConvert 解决一件事：**安全、免费、全能地转换你的本地文件**。
 
-- 隐私安全:所有转换在浏览器或桌面端本地完成,文件不离开你的设备
-- 三大引擎:[ImageMagick](https://imagemagick.org)(图片)、[FFmpeg](https://ffmpeg.org)(音视频)、[Pandoc](https://pandoc.org)(文档)
-- 全平台:Web 在线版 + Windows / macOS / Linux 桌面版(Tauri 2.0)
-- 现代体验:深浅色主题、11 种语言、批量队列、历史记录、ZIP 打包下载
+- 隐私安全：所有转换在浏览器或桌面端本地完成，文件不离开你的设备
+- 三大引擎：[ImageMagick](https://imagemagick.org)（图片）、[FFmpeg](https://ffmpeg.org)（音视频）、[Pandoc](https://pandoc.org)（文档）
+- 全平台：Web 在线版 + Windows / macOS / Linux 桌面版（Tauri 2.0）
+- 现代体验：深浅色主题、11 种语言、批量队列、历史记录、ZIP 打包下载
 
 完整需求请见 [docs/prd/OmniConv-prd.md](docs/prd/OmniConv-prd.md)。
 
+## 下载
+
+桌面安装包发布在 [GitHub Releases](https://github.com/tomosawa/OmniConvert/releases)：
+
+- macOS（Apple Silicon）：`OmniConvert_0.1.0_aarch64.dmg`
+- Windows / Linux 版本需在对应平台自行构建，详见下方「桌面端开发」
+
+Web 版可直接部署静态产物，或使用 Docker 镜像运行。
+
 ## 当前状态
 
-**Phase 8 — Tauri 桌面端(开发中)**
+**v0.1.0 — Web MVP + macOS 桌面端已发布**
 
-完整的 10 阶段开发计划见 [docs/plan/00-overview.md](docs/plan/00-overview.md):
+完整的 10 阶段开发计划见 [docs/plan/00-overview.md](docs/plan/00-overview.md)：
 
 | Phase | 主题 | 状态 |
 | :--- | :--- | :--- |
@@ -29,26 +40,26 @@ OmniConvert 解决一件事:**安全、免费、全能地转换你的本地文�
 | 3 | ImageMagick 图片引擎 | ✅ 已完成 |
 | 4 | FFmpeg 音视频引擎 | ✅ 已完成 |
 | 5 | Pandoc 文档引擎 | ✅ 已完成 |
-| 6 | 批量队列 + 历史 + ZIP(MVP) | ✅ 已完成 |
+| 6 | 批量队列 + 历史 + ZIP（MVP） | ✅ 已完成 |
 | 7 | i18n 补齐 9 种语言 | ✅ 已完成 |
-| 8 | Tauri 桌面端 | 🔄 开发中 |
+| 8 | Tauri 桌面端 | ✅ 已完成（v0.1.0） |
 | 9 | 部署、CI/CD | 待开始 |
 
 ## 技术栈
 
-- **框架**:Nuxt 3 + Vue 3 Composition API + TypeScript(strict mode)
-- **样式**:Tailwind CSS + shadcn-vue(Phase 1 引入)
-- **状态管理**:Pinia
-- **国际化**:@nuxtjs/i18n
-- **主题**:@nuxtjs/color-mode
-- **测试**:Vitest + @vue/test-utils + happy-dom
-- **Lint**:ESLint(@nuxt/eslint flat config) + Prettier
-- **桌面端**(Phase 8):Tauri 2.0 + 原生 CLI Sidecar
-- **部署**:Vercel(Web)+ GitHub Releases(桌面)
+- **框架**：Nuxt 3 + Vue 3 Composition API + TypeScript（strict mode）
+- **样式**：Tailwind CSS + shadcn-vue
+- **状态管理**：Pinia
+- **国际化**：@nuxtjs/i18n
+- **主题**：@nuxtjs/color-mode
+- **测试**：Vitest + @vue/test-utils + happy-dom
+- **Lint**：ESLint（@nuxt/eslint flat config）+ Prettier
+- **桌面端**：Tauri 2.0 + 原生 CLI Sidecar
+- **部署**：Vercel（Web）+ GitHub Releases（桌面）
 
 ## 快速开始
 
-前置:Node ≥ 20.11、pnpm ≥ 10。
+前置：Node ≥ 20.11、pnpm ≥ 10。
 
 ```bash
 pnpm install        # 安装依赖
@@ -62,49 +73,50 @@ pnpm preview        # 预览 build 产物
 pnpm format         # Prettier 格式化全仓库
 ```
 
-## 桌面端开发(Tauri)
+## 桌面端开发（Tauri）
 
-前置:Rust ≥ 1.70、Tauri CLI ≥ 2.0(`pnpm add -D @tauri-apps/cli`)。
+前置：Rust ≥ 1.70、Tauri CLI ≥ 2.0（`pnpm add -D @tauri-apps/cli`）。
 
 ### 开发模式
 
 ```bash
-pnpm tauri:dev      # 启动桌面端开发模式(Tauri 自动启动 Nuxt dev server + 原生窗口)
+pnpm tauri:dev      # 启动桌面端开发模式（Tauri 自动启动 Nuxt dev server + 原生窗口）
 ```
 
-> 开发模式下,Tauri 会自动执行 `pnpm dev` 启动 Nuxt 开发服务器(`http://localhost:3000`),然后在原生窗口中加载该页面。支持热更新。
+> 开发模式下，Tauri 会自动执行 `pnpm dev` 启动 Nuxt 开发服务器（`http://localhost:3000`），然后在原生窗口中加载该页面。支持热更新。
 
 ### 构建 Release
 
 ```bash
 pnpm generate       # 先生成 SSG 静态产物
-pnpm tauri:build    # 构建桌面端安装包(.dmg / .app / .exe / .deb)
+pnpm tauri:build    # 构建桌面端安装包（.dmg / .app / .exe / .deb）
 ```
 
-> 构建前 Tauri 会自动执行 `pnpm generate` 生成静态页面,然后打包为平台安装包。产物在 `src-tauri/target/release/bundle/` 下。
+> 构建前 Tauri 会自动执行 `pnpm generate` 生成静态页面，然后打包为平台安装包。产物在 `src-tauri/target/release/bundle/` 下。
 
 ### Sidecar 二进制
 
-桌面端使用原生 CLI 工具(ImageMagick/FFmpeg/Pandoc)作为 Sidecar,二进制文件位于 `src-tauri/binaries/` 下。首次开发或构建前,确保二进制文件存在:
+桌面端使用原生 CLI 工具（ImageMagick / FFmpeg / Pandoc）作为 Sidecar，二进制文件位于 `src-tauri/binaries/` 下。首次开发或构建前，确保二进制文件存在：
 
 ```bash
 pnpm tauri:prepare-binaries   # 自动检测平台并拷贝系统安装的 CLI 到 src-tauri/binaries/
 ```
 
-也可手动下载二进制放入 `src-tauri/binaries/`,文件名必须匹配 Tauri 平台 triple:
-- macOS ARM64:`ffmpeg-aarch64-apple-darwin`、`magick-aarch64-apple-darwin`、`pandoc-aarch64-apple-darwin`
-- macOS Intel:`ffmpeg-x86_64-apple-darwin`、`magick-x86_64-apple-darwin`、`pandoc-x86_64-apple-darwin`
-- Windows:`ffmpeg-x86_64-pc-windows-msvc.exe` 等
-- Linux:`ffmpeg-x86_64-unknown-linux-gnu` 等
+也可手动下载二进制放入 `src-tauri/binaries/`，文件名必须匹配 Tauri 平台 triple：
+
+- macOS ARM64：`ffmpeg-aarch64-apple-darwin`、`magick-aarch64-apple-darwin`、`pandoc-aarch64-apple-darwin`
+- macOS Intel：`ffmpeg-x86_64-apple-darwin`、`magick-x86_64-apple-darwin`、`pandoc-x86_64-apple-darwin`
+- Windows：`ffmpeg-x86_64-pc-windows-msvc.exe` 等
+- Linux：`ffmpeg-x86_64-unknown-linux-gnu` 等
 
 ### 架构说明
 
 | 环境 | 引擎 | 文件路径 |
 | :--- | :--- | :--- |
-| Web | WASM(浏览器内) | `composables/use*Conversion.ts` |
-| 桌面 | Sidecar(原生 CLI) | `composables/useDesktop*Conversion.ts` |
+| Web | WASM（浏览器内） | `composables/use*Conversion.ts` |
+| 桌面 | Sidecar（原生 CLI） | `composables/useDesktop*Conversion.ts` |
 
-桌面端通过 `useConversionDispatcher` 自动分流 — 检测 `window.__TAURI_INTERNALS__` 判断平台,桌面端使用 Sidecar,Web 端使用 WASM。
+桌面端通过 `useConversionDispatcher` 自动分流 — 检测 `window.__TAURI_INTERNALS__` 判断平台，桌面端使用 Sidecar，Web 端使用 WASM。
 
 ## 目录结构
 
@@ -135,7 +147,7 @@ OmniConvert/
     └── plan/              # 分阶段开发计划
 ```
 
-详见 [CLAUDE.md](CLAUDE.md)(开发约束与命名规范)。
+详见 [CLAUDE.md](CLAUDE.md)（开发约束与命名规范）。
 
 ## Docker 部署
 
@@ -152,6 +164,8 @@ docker build -f docker/Dockerfile --platform linux/amd64 -t omniconvert:latest .
 ```bash
 docker save omniconvert:latest -o docker/omniconvert.tar
 ```
+
+> 镜像 tar 文件体积较大，已加入 `.gitignore`，不会提交到仓库。
 
 ### 上传到 Ubuntu 服务器
 
@@ -179,10 +193,9 @@ docker ps                        # 查看运行状态
 curl http://localhost:5000/health  # 健康检查
 ```
 
-
 ## 贡献
 
-
+欢迎提交 Issue 与 Pull Request。
 
 ## License
 
