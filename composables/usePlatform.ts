@@ -9,7 +9,7 @@ import { computed } from 'vue'
 export function usePlatform() {
   const isDesktop = computed(() => {
     if (typeof window === 'undefined') return false
-    return typeof (window as Record<string, unknown>).__TAURI_INTERNALS__ !== 'undefined'
+    return '__TAURI_INTERNALS__' in window
   })
 
   const isWeb = computed(() => !isDesktop.value)

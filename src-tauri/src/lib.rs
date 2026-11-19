@@ -1,3 +1,7 @@
+use tauri::Manager;
+
+mod sidecar_runtime;
+
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}! Welcome to OmniConvert.", name)
@@ -6,6 +10,10 @@ fn greet(name: &str) -> String {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .setup(|app| {
+            sidecar_runtime::configure(&app.path().resource_dir()?);
+            Ok(())
+        })
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())

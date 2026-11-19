@@ -109,7 +109,8 @@
     "openFolder": "Open folder",
     "error": {
       "generic": "Conversion failed — please retry or check the file"
-    }
+    },
+    "saved": "Saved"
   },
   "batch": {
     "download": "Download",

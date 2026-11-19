@@ -108,7 +108,9 @@
     "openFolder": "打开文件夹",
     "error": {
       "generic": "转换失败,请重试或检查文件"
-    }
+    },
+    "savedTo": "已保存到 {path}",
+    "saveError": "保存文件失败"
   },
   "batch": {
     "download": "下载",

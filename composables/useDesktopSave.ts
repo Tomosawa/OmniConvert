@@ -77,10 +77,8 @@ export function useDesktopSave() {
   async function revealInFolder(filePath: string): Promise<void> {
     if (!isDesktop.value) return
 
-    const { open } = await import('@tauri-apps/plugin-opener')
-    // Tauri plugin-opener's `open` with a directory path opens Finder/Explorer
-    // Using the parent directory to show the containing folder
-    await open(filePath)
+    const { revealItemInDir } = await import('@tauri-apps/plugin-opener')
+    await revealItemInDir(filePath)
   }
 
   return { saveAs, saveBesideOriginal, revealInFolder, isDesktop }

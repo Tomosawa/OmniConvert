@@ -23,9 +23,10 @@ OmniConvert 解决一件事：**安全、免费、全能地转换你的本地文
 
 - macOS（Apple Silicon）：`OmniConvert_0.1.0_aarch64.dmg`
 - Windows（x64）：`OmniConvert_0.1.0_x64-setup.exe`（NSIS 安装包）、`OmniConvert_0.1.0_x64_en-US.msi`（MSI 安装包）
-- Linux 版本需在对应平台自行构建，详见下方「桌面端开发」
+- macOS（Intel x64）和 Linux（x64 `.deb`）：由 GitHub Actions 构建，下一个包含新 workflow 的版本 tag 发布后可下载。
 
 Web 版以静态产物包 `OmniConvert_0.1.0_web.zip` 发布，也可以使用 Docker 镜像运行。
+
 
 ### Web 端发布（dist 打包）
 
@@ -52,7 +53,7 @@ Compress-Archive -Path .output/public/* -DestinationPath OmniConvert_0.1.0_web.z
 | 6 | 批量队列 + 历史 + ZIP（MVP） | ✅ 已完成 |
 | 7 | i18n 补齐 9 种语言 | ✅ 已完成 |
 | 8 | Tauri 桌面端 | ✅ 已完成（v0.1.0） |
-| 9 | 部署、CI/CD | 待开始 |
+| 9 | 部署、CI/CD | 已添加 GitHub Actions 构建与 Pages 部署，待云端首次运行验证 |
 
 ## 技术栈
 
@@ -64,7 +65,7 @@ Compress-Archive -Path .output/public/* -DestinationPath OmniConvert_0.1.0_web.z
 - **测试**：Vitest + @vue/test-utils + happy-dom
 - **Lint**：ESLint（@nuxt/eslint flat config）+ Prettier
 - **桌面端**：Tauri 2.0 + 原生 CLI Sidecar
-- **部署**：Vercel（Web）+ GitHub Releases（桌面）
+- **部署**：GitHub Pages / Vercel（Web）+ GitHub Releases（桌面）
 
 ## 快速开始
 

@@ -68,7 +68,13 @@
     "cancel": "Annuler la conversion",
     "error": {
       "generic": "La conversion a échoué — veuillez réessayer ou vérifier le fichier"
-    }
+    },
+    "save": "Enregistrer dans un dossier",
+    "saveAll": "Tout enregistrer dans un dossier",
+    "saved": "Enregistré",
+    "openFolder": "Ouvrir le dossier",
+    "savedTo": "Enregistré dans {path}",
+    "saveError": "Échec de l’enregistrement du fichier"
   },
   "batch": {
     "download": "Télécharger",
@@ -131,7 +137,8 @@
     "resetToOriginal": "Réinitialiser",
     "clearResolution": "Effacer",
     "lockAspect": "Verrouiller le ratio",
-    "unlockAspect": "Déverrouiller le ratio"
+    "unlockAspect": "Déverrouiller le ratio",
+    "h265CompatNote": "Certains lecteurs ne prennent pas en charge les fichiers H.265 (HEVC). Utilisez VLC ou un lecteur compatible HEVC."
   },
   "documentOptions": {
     "heading": "Options de document",
@@ -211,5 +218,12 @@
       "step3": "Convertir",
       "step4": "Télécharger"
     }
+  },
+  "preview": {
+    "h265NoSupport": "Le navigateur ne prend pas en charge l’aperçu H.265 (HEVC)",
+    "h265Hint": "H.265 nécessite un décodeur dédié et ne peut pas être lu directement dans ce navigateur",
+    "downloadToPlay": "Télécharger pour lire",
+    "openWithPlayer": "Ouvrir avec le lecteur système",
+    "opening": "Ouverture…"
   }
 }

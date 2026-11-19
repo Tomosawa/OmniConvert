@@ -104,7 +104,13 @@
     "cancel": "変換をキャンセル",
     "error": {
       "generic": "変換に失敗しました。再試行するかファイルをご確認ください"
-    }
+    },
+    "save": "フォルダーに保存",
+    "saveAll": "すべてフォルダーに保存",
+    "saved": "保存済み",
+    "openFolder": "フォルダーを開く",
+    "savedTo": "{path} に保存しました",
+    "saveError": "ファイルの保存に失敗しました"
   },
   "batch": {
     "download": "ダウンロード",
@@ -167,7 +173,8 @@
     "resetToOriginal": "元に戻す",
     "clearResolution": "クリア",
     "lockAspect": "アスペクト比をロック",
-    "unlockAspect": "アスペクト比をアンロック"
+    "unlockAspect": "アスペクト比をアンロック",
+    "h265CompatNote": "H.265 (HEVC) ファイルは一部のプレーヤーで再生できない場合があります。VLC または HEVC 対応のプレーヤーをご利用ください。"
   },
   "documentOptions": {
     "heading": "文書オプション",
@@ -211,5 +218,12 @@
   "footer": {
     "copyright": "© 2026 OmniConvert",
     "tagline": "プライバシー優先 · ローカル処理 · オープンソース"
+  },
+  "preview": {
+    "h265NoSupport": "ブラウザーは H.265 (HEVC) のプレビューに対応していません",
+    "h265Hint": "H.265 には専用のデコーダーが必要なため、このブラウザーでは直接再生できません",
+    "downloadToPlay": "ダウンロードして再生",
+    "openWithPlayer": "システムのプレーヤーで開く",
+    "opening": "開いています…"
   }
 }

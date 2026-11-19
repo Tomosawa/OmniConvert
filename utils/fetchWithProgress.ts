@@ -43,7 +43,7 @@ export async function fetchWithProgress(
 
   const reader = resp.body.getReader()
   let loaded = 0
-  const chunks: Uint8Array[] = []
+  const chunks: Uint8Array<ArrayBuffer>[] = []
 
   try {
     while (true) {

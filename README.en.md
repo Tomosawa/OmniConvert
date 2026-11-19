@@ -23,7 +23,7 @@ Desktop installers are published on [GitHub Releases](https://github.com/tomosaw
 
 - macOS (Apple Silicon): `OmniConvert_0.1.0_aarch64.dmg`
 - Windows (x64): `OmniConvert_0.1.0_x64-setup.exe` (NSIS installer), `OmniConvert_0.1.0_x64_en-US.msi` (MSI installer)
-- Linux builds must be produced on their respective platforms — see "Desktop Development" below
+- macOS (Intel x64) and Linux (x64 `.deb`): built by GitHub Actions and available after the next version tag containing the new workflows is released.
 
 The web version ships as a static bundle, `OmniConvert_0.1.0_web.zip`, or can be run as a Docker image.
 
@@ -52,7 +52,7 @@ The complete 10-phase plan is in [docs/plan/00-overview.md](docs/plan/00-overvie
 | 6 | Batch queue + history + ZIP (MVP) | ✅ Done |
 | 7 | i18n for 9 additional languages | ✅ Done |
 | 8 | Tauri desktop app | ✅ Done (v0.1.0) |
-| 9 | Deployment, CI/CD | Not started |
+| 9 | Deployment, CI/CD | GitHub Actions builds and Pages deployment added; first cloud run pending |
 
 ## Tech Stack
 
@@ -64,7 +64,7 @@ The complete 10-phase plan is in [docs/plan/00-overview.md](docs/plan/00-overvie
 - **Testing**: Vitest + @vue/test-utils + happy-dom
 - **Lint**: ESLint (@nuxt/eslint flat config) + Prettier
 - **Desktop**: Tauri 2.0 + native CLI sidecars
-- **Deployment**: Vercel (web) + GitHub Releases (desktop)
+- **Deployment**: GitHub Pages / Vercel (web) + GitHub Releases (desktop)
 
 ## Quick Start
 

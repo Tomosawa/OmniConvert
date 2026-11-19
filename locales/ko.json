@@ -68,7 +68,13 @@
     "cancel": "변환 취소",
     "error": {
       "generic": "변환에 실패했습니다 — 다시 시도하거나 파일을 확인하세요"
-    }
+    },
+    "save": "폴더에 저장",
+    "saveAll": "모두 폴더에 저장",
+    "saved": "저장됨",
+    "openFolder": "폴더 열기",
+    "savedTo": "{path}에 저장됨",
+    "saveError": "파일을 저장하지 못했습니다"
   },
   "batch": {
     "download": "다운로드",
@@ -131,7 +137,8 @@
     "resetToOriginal": "원본으로 복원",
     "clearResolution": "지우기",
     "lockAspect": "가로세로비 잠금",
-    "unlockAspect": "가로세로비 잠금 해제"
+    "unlockAspect": "가로세로비 잠금 해제",
+    "h265CompatNote": "일부 플레이어에서는 H.265 (HEVC) 파일을 재생할 수 없습니다. VLC 또는 HEVC를 지원하는 플레이어를 사용하세요."
   },
   "documentOptions": {
     "heading": "문서 옵션",
@@ -211,5 +218,12 @@
       "step3": "변환 시작",
       "step4": "다운로드"
     }
+  },
+  "preview": {
+    "h265NoSupport": "브라우저에서 H.265 (HEVC) 미리보기를 지원하지 않습니다",
+    "h265Hint": "H.265에는 전용 디코더가 필요하므로 이 브라우저에서 직접 재생할 수 없습니다",
+    "downloadToPlay": "다운로드 후 재생",
+    "openWithPlayer": "시스템 플레이어로 열기",
+    "opening": "여는 중…"
   }
 }

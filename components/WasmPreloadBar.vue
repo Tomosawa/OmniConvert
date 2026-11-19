@@ -49,13 +49,13 @@ preload()
         :class="{
           'border-destructive/30 text-destructive': eng.state === 'error',
           'border-primary/30 text-foreground': eng.state === 'loading',
-          'border-green-500/30 text-green-700 dark:text-green-400': eng.state === 'cached' || eng.state === 'done',
+          'border-green-500/30 text-green-700 dark:text-green-400': eng.state === 'done',
           'border-muted text-muted-foreground': eng.state === 'pending',
         }"
       >
         <!-- Status icon -->
         <Check
-          v-if="eng.state === 'cached' || eng.state === 'done'"
+          v-if="eng.state === 'done'"
           class="h-4 w-4"
         />
         <Loader2
@@ -78,7 +78,7 @@ preload()
           class="tabular-nums text-muted-foreground"
         >{{ eng.percent }}%</span>
         <span
-          v-else-if="eng.state === 'cached'"
+          v-else-if="eng.state === 'done'"
           class="text-muted-foreground"
         >已就绪</span>
         <span

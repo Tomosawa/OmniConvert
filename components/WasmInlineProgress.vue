@@ -48,14 +48,14 @@ preload()
           :key="eng.key"
           class="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs"
           :class="{
-            'bg-green-500/10 text-green-700 dark:text-green-400': eng.state === 'cached' || eng.state === 'done',
+            'bg-green-500/10 text-green-700 dark:text-green-400': eng.state === 'done',
             'bg-primary/10 text-primary': eng.state === 'loading',
             'bg-muted text-muted-foreground': eng.state === 'pending',
             'bg-destructive/10 text-destructive': eng.state === 'error',
           }"
         >
           <Check
-            v-if="eng.state === 'cached' || eng.state === 'done'"
+            v-if="eng.state === 'done'"
             class="h-3 w-3"
           />
           <Loader2

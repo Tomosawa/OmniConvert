@@ -237,6 +237,11 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      // GitHub Pages cannot set COOP/COEP response headers. The scoped service
+      // worker supplies them for FFmpeg's SharedArrayBuffer support.
+      script: process.env.GITHUB_PAGES === 'true'
+        ? [{ src: `${process.env.NUXT_APP_BASE_URL || '/'}coi-serviceworker.js` }]
+        : [],
       title: 'OmniConvert',
       meta: [
         { charset: 'utf-8' },

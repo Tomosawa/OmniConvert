@@ -44,6 +44,9 @@ src-tauri/target
 src-tauri/Cargo.lock
 src-tauri/gen
 src-tauri/binaries/
+src-tauri/sidecar-runtime/
+src-tauri/tauri.ci.conf.json
+release-assets/
 
 # Vercel
 .vercel

@@ -68,7 +68,13 @@
     "cancel": "Cancelar conversão",
     "error": {
       "generic": "A conversão falhou — tente novamente ou verifique o arquivo"
-    }
+    },
+    "save": "Guardar numa pasta",
+    "saveAll": "Guardar tudo numa pasta",
+    "saved": "Guardado",
+    "openFolder": "Abrir pasta",
+    "savedTo": "Guardado em {path}",
+    "saveError": "Não foi possível guardar o ficheiro"
   },
   "batch": {
     "download": "Baixar",
@@ -131,7 +137,8 @@
     "resetToOriginal": "Restaurar",
     "clearResolution": "Limpar",
     "lockAspect": "Bloquear proporção",
-    "unlockAspect": "Desbloquear proporção"
+    "unlockAspect": "Desbloquear proporção",
+    "h265CompatNote": "Alguns leitores não suportam ficheiros H.265 (HEVC). Utilize o VLC ou um leitor compatível com HEVC."
   },
   "documentOptions": {
     "heading": "Opções de documento",
@@ -211,5 +218,12 @@
       "step3": "Converter",
       "step4": "Baixar"
     }
+  },
+  "preview": {
+    "h265NoSupport": "O navegador não suporta a pré-visualização de H.265 (HEVC)",
+    "h265Hint": "O H.265 requer um descodificador dedicado e não pode ser reproduzido diretamente neste navegador",
+    "downloadToPlay": "Transferir para reproduzir",
+    "openWithPlayer": "Abrir com o leitor do sistema",
+    "opening": "A abrir…"
   }
 }
