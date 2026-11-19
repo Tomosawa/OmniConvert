@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { execFileSync } from 'node:child_process'
-import { chmodSync, cpSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
+import { chmodSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { prepareBinaries } from './prepare-sidecar-binaries.mjs'
@@ -30,7 +30,15 @@ if (process.platform === 'darwin') {
   if (!config) throw new Error('ImageMagick configuration directory not found')
   cpSync(config, join(runtime, 'magick-config'), { recursive: true, dereference: true })
   const executables = Object.keys(sources).map(name => join(directory, `${name}-${target}`))
-  const modules = files(join(runtime, 'magick-modules')).filter(path => path.endsWith('.so'))
+  const coderFiles = files(join(runtime, 'magick-modules'))
+  const modules = coderFiles.filter(path => path.endsWith('.so'))
+  for (const archive of coderFiles.filter(path => path.endsWith('.la'))) {
+    // libltdl reads .la before opening the adjacent .so. Clear the original
+    // Homebrew paths so dlopen uses the relocated Mach-O dependencies.
+    const metadata = readFileSync(archive, 'utf8').replace(/^(libdir|dependency_libs)=.*$/gm, "$1=''")
+    chmodSync(archive, 0o644)
+    writeFileSync(archive, metadata)
+  }
   const libraries = join(runtime, 'lib')
   const args = ['-od', '-b', '-d', libraries, '-p', '@executable_path/../Resources/sidecar-runtime/lib/']
   for (const path of [...executables, ...modules]) {
@@ -48,7 +56,7 @@ if (process.platform === 'darwin') {
     }
   }
   bundle.resources = { 'sidecar-runtime/': 'sidecar-runtime/' }
-  bundle.macOS = { signingIdentity: '-' }
+  bundle.macOS = { signingIdentity: '-', entitlements: 'entitlements.ci.plist' }
 } else if (process.platform === 'win32') {
   // Keep DLLs, ImageMagick coders and config together. CI supplies real
   // executable paths instead of Chocolatey's launcher shims.

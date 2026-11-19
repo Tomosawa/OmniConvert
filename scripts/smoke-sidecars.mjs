@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { cpSync, existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { getTargetTriple } from './prepare-sidecar-binaries.mjs'
@@ -42,10 +42,15 @@ try {
     execFileSync(binary, args, { env, stdio: 'inherit' })
   }
   const image = join(temporary, 'test.png')
+  const jpeg = join(temporary, 'test.jpg')
   const audio = join(temporary, 'test.wav')
   const input = join(temporary, 'test.md')
   const output = join(temporary, 'test.html')
   run('magick', ['-size', '2x2', 'xc:red', image])
+  run('magick', [image, jpeg])
+  if (!readFileSync(jpeg).subarray(0, 3).equals(Buffer.from([0xff, 0xd8, 0xff]))) {
+    throw new Error('ImageMagick did not produce a valid JPEG header')
+  }
   run('ffmpeg', ['-v', 'error', '-f', 'lavfi', '-i', 'sine=duration=0.1', audio])
   writeFileSync(input, '# Sidecar smoke test\n')
   run('pandoc', [input, '-o', output])
