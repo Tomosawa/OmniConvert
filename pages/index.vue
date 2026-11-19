@@ -89,10 +89,15 @@ const conversionCount = computed(() => {
             <ArrowRight class="h-4 w-4" />
           </Button>
         </NuxtLink>
-        <Button size="lg" variant="outline" class="gap-2 text-base" disabled>
+        <Button
+          as="a"
+          href="https://github.com/Tomosawa/OmniConvert/releases"
+          size="lg"
+          variant="outline"
+          class="gap-2 text-base"
+        >
           <Download class="h-5 w-5" />
           {{ t('landing.downloadClient') }}
-          <span class="text-xs text-muted-foreground">({{ t('common.comingSoon') }})</span>
         </Button>
       </div>
     </div>

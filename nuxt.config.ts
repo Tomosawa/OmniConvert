@@ -2,6 +2,7 @@ import { fileURLToPath } from 'node:url'
 import { defineNuxtConfig } from 'nuxt/config'
 import wasm from 'vite-plugin-wasm'
 import topLevelAwait from 'vite-plugin-top-level-await'
+import { version } from './package.json'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-25',
@@ -90,7 +91,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       appName: 'OmniConvert',
-      appVersion: '0.0.1',
+      appVersion: version,
       largeFileThreshold: 524288000,
       enableHistory: true,
       defaultConcurrency: 2,

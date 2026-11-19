@@ -1,6 +1,6 @@
 [package]
 name = "omniconvert"
-version = "0.1.0"
+version = "0.0.2"
 description = "Privacy-first local file converter"
 authors = ["OmniConvert Team"]
 edition = "2021"
