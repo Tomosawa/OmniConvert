@@ -15,7 +15,7 @@ OmniConvert does one thing: **convert your local files securely, for free, and a
 - Everywhere: Web version plus Windows / macOS / Linux desktop apps (Tauri 2.0)
 - Modern experience: light/dark themes, 11 languages, batch queue, history, ZIP download
 
-Full requirements: [docs/prd/OmniConv-prd.md](docs/prd/OmniConv-prd.md).
+Website: [OmniConvert](https://tomosawa.github.io/OmniConvert/)
 
 ## Download
 

@@ -15,7 +15,7 @@ OmniConvert 解决一件事：**安全、免费、全能地转换你的本地文
 - 全平台：Web 在线版 + Windows / macOS / Linux 桌面版（Tauri 2.0）
 - 现代体验：深浅色主题、11 种语言、批量队列、历史记录、ZIP 打包下载
 
-完整需求请见 [docs/prd/OmniConv-prd.md](docs/prd/OmniConv-prd.md)。
+在线访问地址：[OmniConvert](https://tomosawa.github.io/OmniConvert/)
 
 ## 下载
 
@@ -26,6 +26,7 @@ OmniConvert 解决一件事：**安全、免费、全能地转换你的本地文
 - macOS（Intel x64）和 Linux（x64 `.deb`）：由 GitHub Actions 构建，下一个包含新 workflow 的版本 tag 发布后可下载。
 
 Web 版以静态产物包 `OmniConvert_0.1.0_web.zip` 发布，也可以使用 Docker 镜像运行。
+可在线预览
 
 
 ### Web 端发布（dist 打包）
