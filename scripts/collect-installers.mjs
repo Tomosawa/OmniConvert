@@ -9,7 +9,9 @@ let count = 0
 function collect(directory) {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
     const path = join(directory, entry.name)
-    if (entry.isDirectory()) collect(path)
+    if (entry.isDirectory()) {
+      if (!entry.name.endsWith('.app')) collect(path)
+    }
     else if (/\.(dmg|exe|msi|deb)$/.test(entry.name)) {
       copyFileSync(path, join(destination, entry.name))
       count++

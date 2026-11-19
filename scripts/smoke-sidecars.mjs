@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process'
 import { cpSync, existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
 import { getTargetTriple } from './prepare-sidecar-binaries.mjs'
 
 // Exercise relocated engines, including ImageMagick's dynamically loaded
@@ -13,7 +13,10 @@ try {
   let runtime = join(temporary, 'sidecar-runtime')
   const suffix = process.platform === 'win32' ? '.exe' : ''
   if (process.platform === 'darwin') {
-    const app = `src-tauri/target/${target}/release/bundle/macos/OmniConvert.app/Contents`
+    const app = resolve('src-tauri', 'target', target, 'release', 'bundle', 'macos', 'OmniConvert.app', 'Contents')
+    if (!existsSync(app)) {
+      throw new Error(`Missing macOS app bundle at ${app}. Build with --bundles app,dmg to keep the app for smoke testing.`)
+    }
     directory = join(app, 'MacOS')
     runtime = join(app, 'Resources', 'sidecar-runtime')
   } else {
@@ -34,7 +37,9 @@ try {
     env.MAGICK_CODER_MODULE_PATH = existsSync(coders) ? coders : join(runtime, 'magick')
   }
   function run(name, args) {
-    execFileSync(join(directory, name + suffix), args, { env, stdio: 'inherit' })
+    const binary = join(directory, name + suffix)
+    if (!existsSync(binary)) throw new Error(`Missing bundled sidecar: ${binary}`)
+    execFileSync(binary, args, { env, stdio: 'inherit' })
   }
   const image = join(temporary, 'test.png')
   const audio = join(temporary, 'test.wav')
