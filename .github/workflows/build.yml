@@ -120,8 +120,8 @@ jobs:
           APPLE_SIGNING_IDENTITY: '-'
       - name: Smoke test bundled engines
         run: node scripts/smoke-sidecars.mjs ${{ matrix.target }}
-      - name: Collect installers
-        run: node scripts/collect-installers.mjs ${{ matrix.target }}
+      - name: Collect installers with platform names
+        run: node scripts/collect-installers.mjs ${{ matrix.target }} ${{ runner.os }}
       - uses: actions/upload-artifact@v4
         with:
           name: release-${{ matrix.target }}
