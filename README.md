@@ -31,6 +31,8 @@ Web 版以静态产物包 `OmniConvert_0.1.0_web.zip` 发布，也可以使用 D
 
 ### Web 端发布（dist 打包）
 
+推送版本 tag（如 `v0.0.3`）后，GitHub Actions 会构建 Web ZIP 和桌面安装包，并在全部构建成功后发布 GitHub Release。同一个 tag 也会触发 GitHub Pages 构建和部署。
+
 ```bash
 pnpm generate        # 生成 SSG 静态产物到 .output/public
 # 打包为发布用 zip（PowerShell）

@@ -29,6 +29,8 @@ The web version ships as a static bundle, `OmniConvert_0.1.0_web.zip`, or can be
 
 ### Web release (dist packaging)
 
+Pushing a version tag such as `v0.0.3` builds the Web ZIP and desktop installers, then publishes a GitHub Release after all builds pass. The same tag also builds and deploys GitHub Pages.
+
 ```bash
 pnpm generate        # Generate static (SSG) output into .output/public
 # Package the release zip (PowerShell)
